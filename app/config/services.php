@@ -1,11 +1,14 @@
 <?php
 
+use app\models\AnimauxModel;
 use flight\Engine;
 use flight\database\PdoWrapper;
 use flight\debug\database\PdoQueryCapture;
 use Tracy\Debugger;
 use app\models\EspeceModel;
-use app\models\FrontModel;
+use app\models\Fonction\FonctionModel;
+
+
 
 /** 
  * @var array $config This comes from the returned array at the bottom of the config.php file
@@ -39,6 +42,10 @@ Flight::map('EspeceModel', function () {
     return new EspeceModel(Flight::db());
 });
 
-Flight::map('FrontModel', function () {
-    return new FrontModel(Flight::db());
+Flight::map('AnimauxModel', function () {
+    return new AnimauxModel(Flight::db());
+});
+
+Flight::map('FonctionModel', function () {
+    return new FonctionModel(Flight::db());
 });

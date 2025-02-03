@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS elevage_animaux (
     prixAchat INT NOT NULL,
     poidsInitial DECIMAL(5,2) NOT NULL,
     dateAchat DATE NOT NULL,
-    FOREIGN KEY (idEspece) REFERENCES espece(idEspece) 
+    FOREIGN KEY (idEspece) REFERENCES elevage_espece(idEspece) 
 );
 
 -- Table des types d’alimentation
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS elevage_alimentation (
     nomAlimentation VARCHAR(50) NOT NULL,
     idEspece INT NOT NULL,
     gainPoids DECIMAL(4,2) NOT NULL, -- Pourcentage de gain de poids
-    FOREIGN KEY (idEspece) REFERENCES espece(idEspece) ON DELETE CASCADE
+    FOREIGN KEY (idEspece) REFERENCES elevage_espece(idEspece) ON DELETE CASCADE
 );
 
 -- Table pour enregistrer les achats d’alimentation
