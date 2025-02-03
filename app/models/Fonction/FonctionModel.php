@@ -18,9 +18,9 @@ class FonctionModel
         return $rep;
     }
 
-    public function upload($file)
+    public function upload($file, $dossier)
     {
-        $dossier = "public/assets/img/animaux/";
+        $dossier = "public/assets/img/"."$dossier/";
         $fichier = $this->fileName($file);
         $extensions = ['.png', '.gif', '.jpg', '.jpeg', '.PNG', '.GIF', '.JPG', '.JPEG'];
         $extension = strrchr($file['name'], '.');
