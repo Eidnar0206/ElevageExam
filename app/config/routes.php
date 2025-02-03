@@ -3,9 +3,13 @@
 use app\controllers\AnimalController;
 use app\controllers\EspeceController;
 use app\controllers\HomeController;
+use app\controllers\alimentationController;
 use flight\Engine;
 use flight\net\Route;
 use flight\net\Router;
+
+Flight::route('POST /especes/update', ['app\controllers\EspeceController', 'update']);
+
 // use Flight;
 
 /** 
@@ -21,15 +25,24 @@ $homeController = new HomeController();
 $router->get('/', [$homeController, 'goAccueil']);
 $router->post('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/ajoutEspece', [$especeController, 'ajoutEspece']);
+$router->get('/listEspece', [$especeController, 'listEspece']);
+
 
 Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));
-Flight::route('/espece/edit/@id', ['app\controllers\EspeceController', 'editEspece']);
-Flight::route('POST /espece/update', ['app\controllers\EspeceController', 'updateEspece']);
 
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
 $router->post('/ajoutAnimal', [$animalController, 'ajoutAnimal']);
 $router->get('/template', [$animalController, 'goTemplate']);
+
+
+
+$alimentationController = new alimentationController();
+$router->get('/ajoutAlimentation', [$alimentationController, 'afficherFormulaireAjout']);
+$router->post('/ajoutAlimentation', [$alimentationController, 'ajoutAlimentation']);
+$router->get('/achatAlimentation', [$alimentationController, 'afficherFormulaireAchat']);
+$router->post('/achatAlimentation', [$alimentationController, 'achatAlimentation']);
+
 
 
 
