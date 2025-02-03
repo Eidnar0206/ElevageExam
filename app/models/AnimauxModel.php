@@ -18,6 +18,7 @@ class AnimauxModel
                         VALUES (?, ?, ?, ?)";
                 $stmt = $this->db->prepare($sql);
                 $stmt->execute([$idEspece, $prixAchat, $poidsInitial, $dateAchat]);
+                Flight::CapitalModel()->insertTransaction($prixAchat, "sortie", "Achat d'un animal", $dateAchat);
                 return true; // Success
             } else {
                 return "Insufficient funds on the specified date."; // Error message
