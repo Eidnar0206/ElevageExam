@@ -24,4 +24,24 @@ class alimentationModel
         $stmt->execute([$idAlimentation, $quantite, $prixTotal, $dateAchat]);
     }
 
+    public function getAll(){
+        $sql = "SELECT * FROM elevage_alimentation";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getAchatAlimentation($idAlimentation, $dateDebut, $dateFin) {
+        try {
+            $sql = "SELECT * FROM elevage_achatAlimentation 
+                    WHERE idAlimentation = ? 
+                    AND dateAchat BETWEEN ? AND ?";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$idAlimentation, $dateDebut, $dateFin]);
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
 }

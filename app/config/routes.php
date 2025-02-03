@@ -34,6 +34,9 @@ $router->post('/ajoutAnimal', [$animalController, 'ajoutAnimal']);
 $alimentationController = new alimentationController();
 $router->get('/ajoutAlimentation', [$alimentationController, 'afficherFormulaireAjout']);
 $router->post('/ajoutAlimentation', [$alimentationController, 'ajoutAlimentation']);
+$router->get('/achatAlimentation', [$alimentationController, 'afficherFormulaireAchat']);
+$router->post('/achatAlimentation', [$alimentationController, 'achatAlimentation']);
+
 
 
 

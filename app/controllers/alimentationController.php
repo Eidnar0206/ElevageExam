@@ -36,4 +36,30 @@ class alimentationController
 
         Flight::render('Alimentation/ajoutAlimentation', $data);
     }
+
+    public function afficherFormulaireAchat(){
+        $model = new alimentationModel(Flight::db());
+        $alimentations = $model->getAll();
+        $data = [
+            'alimentations' => $alimentations
+        ];
+        Flight::render('Alimentation/achatAlimentation', $data);        
+    }
+
+    public function achatAlimentation(){
+        $model = new alimentationModel(Flight::db());
+        $idAlimentation = $_POST['idAlimentation'];
+        $quantite = $_POST['quantite'];
+        $prixTotal = $_POST['prixTotal'];
+        $dateAchat = $_POST['dateAchat'];
+
+        $model->achatAlimentation($idAlimentation, $quantite, $prixTotal, $dateAchat);
+
+        $alimentations = $model->getAll();
+        $data = [
+            'alimentations' => $alimentations
+        ];
+
+        Flight::render('Alimentation/achatAlimentation', $data);        
+    }
 }
