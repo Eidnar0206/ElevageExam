@@ -16,5 +16,6 @@
         <input type="number" name="qte" placeholder="Quantite de nourriture a consommer par jour"> <br>
         <button type="submit">Ajouter</button>
     </form>
+    <a href="listEspece">Liste</a>
 </body>
 </html>

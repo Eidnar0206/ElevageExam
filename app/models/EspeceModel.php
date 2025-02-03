@@ -46,28 +46,27 @@ class EspeceModel
         return $stmt->fetch();
     }
     
-    public function updateEspece($idEspece, $data) {
-        $query = "UPDATE elevage_espece SET 
-            nomEspece = :nom,
-            poidsMin = :pMin,
-            poidsMax = :pMax,
-            prixVenteKg = :pv,
-            joursSansManger = :nbJour,
-            pertePoidsJour = :perte,
-            quantiteNourritureJour = :qte
-            WHERE idEspece = :id";
-        
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([
-            ':id' => $idEspece,
-            ':nom' => $data['nomEspece'],
-            ':pMin' => $data['poidsMin'],
-            ':pMax' => $data['poidsMax'],
-            ':pv' => $data['prixVenteKg'],
-            ':nbJour' => $data['joursSansManger'],
-            ':perte' => $data['pertePoidsJour'],
-            ':qte' => $data['quantiteNourritureJour']
-        ]);
+    public function updateEspeces($data) {
+
+        foreach ($data as $espece) {
+            $query = "UPDATE elevage_espece 
+                                  SET nomEspece = ?, poidsMin = ?, poidsMax = ?, prixVenteKg = ?, 
+                                      joursSansManger = ?, pertePoidsJour = ?, quantiteNourritureJour = ? 
+                                  WHERE idEspece = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                $espece['nomEspece'],
+                $espece['poidsMin'],
+                $espece['poidsMax'],
+                $espece['prixVenteKg'],
+                $espece['joursSansManger'],
+                $espece['pertePoidsJour'],
+                $espece['quantiteNourritureJour'],
+                $espece['idEspece']
+            ]);
+        }
+
+        return ["message" => "Mise à jour réussie"];
     }
     
 }

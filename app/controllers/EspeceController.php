@@ -32,30 +32,24 @@ class EspeceController
         $data = [
             'especes' => $allEspeces
         ];
-        Flight::render('listEspeces', $data);
+        Flight::render('Espece/listEspeces', $data);
     }
 
-    public function editEspece($idEspece) {
-        $espece = Flight::EspeceModel()->getEspeceById($idEspece);
-        Flight::render('Espece/editEspece', ['espece' => $espece]);
-    }
-    
-    public function updateEspece() {
-        $idEspece = Flight::request()->data->idEspece;
-        $data = [
-            'nomEspece' => Flight::request()->data->nomEspece,
-            'poidsMin' => Flight::request()->data->poidsMin,
-            'poidsMax' => Flight::request()->data->poidsMax,
-            'prixVenteKg' => Flight::request()->data->prixVenteKg,
-            'joursSansManger' => Flight::request()->data->joursSansManger,
-            'pertePoidsJour' => Flight::request()->data->pertePoidsJour,
-            'quantiteNourritureJour' => Flight::request()->data->quantiteNourritureJour
-        ];
-    
-        $model = new EspeceModel(Flight::db());
-        $model->updateEspece($idEspece, $data);
-    
-        Flight::redirect('/especes');
+    public static function update() {
+        $data = json_decode(file_get_contents("php://input"), true);
+        
+        // Ajouter un log pour voir les données reçues
+        error_log('Données reçues : ' . print_r($data, true));
+        
+        if (!$data) {
+            error_log('Aucune donnée reçue');
+            Flight::json(["error" => "Aucune donnée reçue"], 400);
+            return;
+        }
+        
+        $result = Flight::EspeceModel()->updateEspeces($data);
+        error_log('Résultat : ' . print_r($result, true));
+        Flight::json($result);
     }
     
 
