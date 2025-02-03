@@ -26,6 +26,7 @@ $router->get('/', [$homeController, 'goAccueil']);
 $router->post('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/listEspece', [$especeController, 'listEspece']);
+$router->get('/achatAnimal', [$animalController, 'achatAnimal']);
 
 
 Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));

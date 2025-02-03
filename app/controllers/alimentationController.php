@@ -16,9 +16,10 @@ class alimentationController
         $model = new EspeceModel(Flight::db());
         $Especes = $model->getAllEspeces();
         $data = [
-            'Especes' => $Especes
+            'Especes' => $Especes,
+            'page' => 'Alimentation/ajoutAlimentation'
         ];
-        Flight::render('Alimentation/ajoutAlimentation', $data);
+        Flight::render('navbarFooter', $data);
     }
 
     public function ajoutAlimentation() {
@@ -31,10 +32,11 @@ class alimentationController
         $espmodel = new EspeceModel(Flight::db());
         $Especes = $espmodel->getAllEspeces();
         $data = [
-            'Especes' => $Especes
+            'Especes' => $Especes,
+            'page' => 'Alimentation/ajoutAlimentation'
         ];
 
-        Flight::render('Alimentation/ajoutAlimentation', $data);
+        Flight::render('navbarFooter', $data);
     }
 
     public function afficherFormulaireAchat(){

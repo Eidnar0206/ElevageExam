@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+use app\models\EspeceModel;
 use Flight;
 
 class AnimalController
@@ -31,5 +32,17 @@ class AnimalController
             'especes' => $esp
         ]);
     }
+
+    public function achatAnimal() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+        }
+        $especes = Flight::EspeceModel()->getAllEspeces();
+        $data = [
+            'especes' => $especes
+        ];
+        Flight::render('Animal/achatAnimal', $data);
+    }
+
 
 }
