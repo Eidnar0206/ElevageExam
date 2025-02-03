@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\Generalized;
 use ReflectionClass;
 use ReflectionProperty;
 class FrontModel

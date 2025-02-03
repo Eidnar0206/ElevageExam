@@ -8,6 +8,15 @@ CREATE TABLE IF NOT EXISTS elevage_capital (
     dateDebut DATE NOT NULL DEFAULT '2025-02-03'
 );
 
+-- Table pour gérer le capital (entrées et sorties d'argent)
+CREATE TABLE IF NOT EXISTS elevage_capitalTransactions (
+    idTransaction INT PRIMARY KEY AUTO_INCREMENT,
+    montant DECIMAL(10,2) NOT NULL,
+    typeTransaction ENUM('entrée', 'sortie') NOT NULL, -- 'entrée' pour l'ajout d'argent, 'sortie' pour le retrait d'argent
+    description VARCHAR(255),
+    dateTransaction DATE NOT NULL DEFAULT '2025-02-03'
+);
+
 -- Table des animaux
 CREATE TABLE IF NOT EXISTS elevage_espece (
     idEspece INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,6 +33,7 @@ CREATE TABLE IF NOT EXISTS elevage_espece (
 CREATE TABLE IF NOT EXISTS elevage_animaux (
     idAnimal INT PRIMARY KEY AUTO_INCREMENT,
     idEspece INT NOT NULL,
+    prixAchat INT NOT NULL,
     poidsInitial DECIMAL(5,2) NOT NULL,
     dateAchat DATE NOT NULL,
     FOREIGN KEY (idEspece) REFERENCES espece(idEspece) ON DELETE CASCADE
@@ -99,3 +109,4 @@ CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
     nomImage VARCHAR(50) NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
 );
+
