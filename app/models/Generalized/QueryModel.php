@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\Generalized;
 use \Exception;
 use ReflectionClass;
 use ReflectionProperty;

@@ -4,10 +4,8 @@ use flight\Engine;
 use flight\database\PdoWrapper;
 use flight\debug\database\PdoQueryCapture;
 use Tracy\Debugger;
+use app\models\EspeceModel;
 use app\models\FrontModel;
-use app\models\QueryModel;
-
-use app\models\TheModel;
 
 /** 
  * @var array $config This comes from the returned array at the bottom of the config.php file
@@ -37,14 +35,10 @@ use app\models\TheModel;
 //     return new ProductModel(Flight::db());
 // });
 
+Flight::map('EspeceModel', function () {
+    return new EspeceModel(Flight::db());
+});
+
 Flight::map('FrontModel', function () {
     return new FrontModel(Flight::db());
-});
-
-Flight::map('QueryModel', function () {
-    return new QueryModel(Flight::db());
-});
-
-Flight::map('TheModel', function () {
-    return new TheModel(Flight::db());
 });
