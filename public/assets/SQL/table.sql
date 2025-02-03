@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS elevage_capital (
 CREATE TABLE IF NOT EXISTS elevage_capitalTransactions (
     idTransaction INT PRIMARY KEY AUTO_INCREMENT,
     montant DECIMAL(10,2) NOT NULL,
-    typeTransaction ENUM('entrée', 'sortie') NOT NULL, -- 'entrée' pour l'ajout d'argent, 'sortie' pour le retrait d'argent
+    typeTransaction ENUM('entree', 'sortie') NOT NULL, -- 'entrée' pour l'ajout d'argent, 'sortie' pour le retrait d'argent
     description VARCHAR(255),
     dateTransaction DATE NOT NULL DEFAULT '2025-02-03'
 );
