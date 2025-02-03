@@ -1,6 +1,6 @@
 <?php
 
-use app\controllers\TheController;
+use app\controllers\EspeceController;
 use flight\Engine;
 use flight\net\Route;
 use flight\net\Router;
@@ -11,7 +11,8 @@ use flight\net\Router;
  * @var Engine $app
  */
 
-$theController = new TheController();
-$router->get('/', [$theController, 'goAjoutThe']);
-$router->post('/ajoutThe', [$theController, 'ajoutThe']);
+$especeController = new EspeceController();
+$router->get('/', [$especeController, 'goAjoutEspece']);
+$router->post('/ajoutEspece', [$especeController, 'ajoutEspece']);
+
 
