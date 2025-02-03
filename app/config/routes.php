@@ -23,7 +23,6 @@ Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'aj
 Flight::route('/espece/edit/@id', ['app\controllers\EspeceController', 'editEspece']);
 Flight::route('POST /espece/update', ['app\controllers\EspeceController', 'updateEspece']);
 
-
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
 $router->post('/ajoutAnimal', [$animalController, 'ajoutAnimal']);
