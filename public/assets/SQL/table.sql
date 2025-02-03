@@ -88,22 +88,22 @@ CREATE TABLE IF NOT EXISTS elevage_morts (
 );
 
 --Table pour stocker les perte de poids
-CREATE TABLE IF NOT EXISTS elevage_pertePoids (
+/*CREATE TABLE IF NOT EXISTS elevage_pertePoids (
     idPertePoids INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
     poidsPerte DECIMAL(5,2) NOT NULL,
     datePerte DATE NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
-);
+);*/
 
 --table pour stocker les gains de poids
-CREATE TABLE IF NOT EXISTS elevage_gainPoids (
+/*CREATE TABLE IF NOT EXISTS elevage_gainPoids (
     idGainPoids INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
     poidsGagne DECIMAL(5,2) NOT NULL,
     dateGain DATE NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
-);
+);*/
 
 --table pour stocker les images des animaux
 CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
