@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use app\models\CapitalModel;
 class alimentationModel 
 {
     protected $db;
@@ -15,6 +15,15 @@ class alimentationModel
                     VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$nomAlimentation, $idEspece, $pct]);
+    }
+
+    public function verifSolde($dateAchat, $prix){
+        $model = new CapitalModel();
+        $montant = $model->getMontantActuel($dateAchat);
+        if($prix>$montant){
+            return false;
+        }
+        return true;
     }
 
     public function achatAlimentation($idAlimentation, $quantite, $prixTotal, $dateAchat){

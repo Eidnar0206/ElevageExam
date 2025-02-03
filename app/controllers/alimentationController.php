@@ -53,13 +53,25 @@ class alimentationController
         $prixTotal = $_POST['prixTotal'];
         $dateAchat = $_POST['dateAchat'];
 
-        $model->achatAlimentation($idAlimentation, $quantite, $prixTotal, $dateAchat);
-
         $alimentations = $model->getAll();
-        $data = [
-            'alimentations' => $alimentations
-        ];
 
-        Flight::render('Alimentation/achatAlimentation', $data);        
+        $verif = $model->verifSolde($dateAchat, $prixTotal);
+        if($verif){
+            $data = [
+                'alimentations' => $alimentations
+            ];
+
+            $model->achatAlimentation($idAlimentation, $quantite, $prixTotal, $dateAchat);
+    
+            Flight::render('Alimentation/achatAlimentation', $data);        
+        }
+        else{
+            $data = [
+                'alimentations' => $alimentations,
+                'insuf' => 'dfghjkl'
+            ];
+
+            Flight::render('Alimentation/achatAlimentation', $data);        
+        }
     }
 }

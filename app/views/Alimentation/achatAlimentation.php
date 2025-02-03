@@ -6,6 +6,9 @@
     <title>Achat Alimentation</title>
 </head>
 <body>
+    <?php if(isset($insuf)) { ?>
+        <p> Le solde actuel est insuffisant pour effectuer l'achat </p>
+    <?php } ?>
     <form action="achatAlimentation" method="post">
         <p> Alimentation : </p>
         <select name="idAlimentation">
