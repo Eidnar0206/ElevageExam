@@ -11,7 +11,8 @@ class AnimalController
     }
 
     public function goAjoutAnimal() {
-        Flight::render("ajoutAnimal");
+        $esp = Flight::EspeceModel()->getAllEspecesIdNom();
+        Flight::render("ajoutAnimal", ["especes" => $esp]);
     }
 
     public function ajoutAnimal() {
@@ -22,6 +23,7 @@ class AnimalController
         $dateAchat = $_POST['dateAchat'];
         $files = $_FILES['photos'];
         Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files);
-        Flight::render("ajoutAnimal");
+        $esp = Flight::EspeceModel()->getAllEspecesIdNom();
+        Flight::render("ajoutAnimal", ["especes" => $esp]);
     }
 }

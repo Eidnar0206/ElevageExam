@@ -68,5 +68,14 @@ class EspeceModel
 
         return ["message" => "Mise à jour réussie"];
     }
+    public function getAllEspecesIdNom() {
+        try {
+            $sql = "SELECT idEspece, nomEspece FROM elevage_espece";
+            $stmt = $this->db->query($sql);
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
     
 }
