@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS elevage_alimentation (
     nomAlimentation VARCHAR(50) NOT NULL,
     idEspece INT NOT NULL,
     gainPoids DECIMAL(4,2) NOT NULL, -- Pourcentage de gain de poids
-    FOREIGN KEY (idEspece) REFERENCES elevage_espece(idEspece) ON DELETE CASCADE
+    FOREIGN KEY (idEspece) REFERENCES elevage_espece(idEspece) 
 );
 
 -- Table pour enregistrer les achats d’alimentation
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS elevage_achatAlimentation (
     quantite DECIMAL(4,2) NOT NULL,
     prixTotal DECIMAL(10,2) NOT NULL,
     dateAchat DATE NOT NULL,
-    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation(idAlimentation) ON DELETE CASCADE
+    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation(idAlimentation) 
 );
 
 -- Table pour enregistrer l'alimentation donnée aux animaux
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS elevage_alimentationAnimaux (
     idAnimal INT NOT NULL,
     idAlimentation INT NOT NULL,
     dateNourriture DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE,
-    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation (idAlimentation) ON DELETE CASCADE
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal),
+    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation (idAlimentation) 
 );
 
 -- Table des ventes d'animaux
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS elevage_Ventes (
     poidsVente DECIMAL(5,2) NOT NULL,
     prixTotal DECIMAL(10,2) NOT NULL,
     dateVente DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
 -- Table pour stocker les morts d’animaux
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS elevage_morts (
     idMort INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
     dateMort DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
 --Table pour stocker les perte de poids
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS elevage_pertePoids (
     idAnimal INT NOT NULL,
     poidsPerte DECIMAL(5,2) NOT NULL,
     datePerte DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
 --table pour stocker les gains de poids
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS elevage_gainPoids (
     idAnimal INT NOT NULL,
     poidsGagne DECIMAL(5,2) NOT NULL,
     dateGain DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
 --table pour stocker les images des animaux
@@ -110,6 +110,6 @@ CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
     idImage INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
     nomImage VARCHAR(50) NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
