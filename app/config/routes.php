@@ -17,6 +17,12 @@ $animalController = new AnimalController();
 
 $router->get('/', [$especeController, 'goAjoutEspece']);
 $router->post('/ajoutEspece', [$especeController, 'ajoutEspece']);
+$router->get('/ajoutEspece', [$especeController, 'ajoutEspece']);
+
+Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));
+Flight::route('/espece/edit/@id', ['app\controllers\EspeceController', 'editEspece']);
+Flight::route('POST /espece/update', ['app\controllers\EspeceController', 'updateEspece']);
+
 
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
