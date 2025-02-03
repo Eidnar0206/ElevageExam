@@ -16,14 +16,15 @@ CREATE TABLE IF NOT EXISTS elevage_espece (
     poidsMax DECIMAL(5,2) NOT NULL,
     prixVenteKg DECIMAL(5,2) NOT NULL,
     joursSansManger INT NOT NULL,
-    pertePoidsJour DECIMAL(4,2) NOT NULL
+    pertePoidsJour DECIMAL(4,2) NOT NULL,
+    image VARCHAR(250) NOT NULL
 );
 
 -- Table pour stocker les animaux achetés
 CREATE TABLE IF NOT EXISTS elevage_animaux (
     idAnimal INT PRIMARY KEY AUTO_INCREMENT,
     idEspece INT NOT NULL,
-    poidsActuel DECIMAL(5,2) NOT NULL,
+    poidsInitial DECIMAL(5,2) NOT NULL,
     dateAchat DATE NOT NULL,
     FOREIGN KEY (idEspece) REFERENCES espece(idEspece) ON DELETE CASCADE
 );
@@ -62,5 +63,39 @@ CREATE TABLE IF NOT EXISTS elevage_Ventes (
     poidsVente DECIMAL(5,2) NOT NULL,
     prixTotal DECIMAL(10,2) NOT NULL,
     dateVente DATE NOT NULL,
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+);
+
+-- Table pour stocker les morts d’animaux
+CREATE TABLE IF NOT EXISTS elevage_morts (
+    idMort INT PRIMARY KEY AUTO_INCREMENT,
+    idAnimal INT NOT NULL,
+    dateMort DATE NOT NULL,
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+);
+
+--Table pour stocker les perte de poids
+CREATE TABLE IF NOT EXISTS elevage_pertePoids (
+    idPertePoids INT PRIMARY KEY AUTO_INCREMENT,
+    idAnimal INT NOT NULL,
+    poidsPerte DECIMAL(5,2) NOT NULL,
+    datePerte DATE NOT NULL,
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+);
+
+--table pour stocker les gains de poids
+CREATE TABLE IF NOT EXISTS elevage_gainPoids (
+    idGainPoids INT PRIMARY KEY AUTO_INCREMENT,
+    idAnimal INT NOT NULL,
+    poidsGagne DECIMAL(5,2) NOT NULL,
+    dateGain DATE NOT NULL,
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
+);
+
+--table pour stocker les images des animaux
+CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
+    idImage INT PRIMARY KEY AUTO_INCREMENT,
+    idAnimal INT NOT NULL,
+    nomImage VARCHAR(50) NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
 );
