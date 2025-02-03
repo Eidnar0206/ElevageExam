@@ -11,16 +11,19 @@ class AnimauxModel
     public function __construct($db) {
         $this->db = $db;
     }
-
-    function insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat) {
+    public function insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat) {
         try {
-            $sql = "INSERT INTO elevage_animaux (idEspece, prixAchat, poidsInitial, dateAchat) 
-                    VALUES (?, ?, ?, ?)";
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute([$idEspece, $prixAchat, $poidsInitial, $dateAchat]);
+            if ($this->verifySolde($dateAchat, $prixAchat)) {
+                $sql = "INSERT INTO elevage_animaux (idEspece, prixAchat, poidsInitial, dateAchat) 
+                        VALUES (?, ?, ?, ?)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute([$idEspece, $prixAchat, $poidsInitial, $dateAchat]);
+                return true; // Success
+            } else {
+                return "Insufficient funds on the specified date."; // Error message
+            }
         } catch (\PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+            return "Database error: " . $e->getMessage(); // Database error
         }
     }
     function getLastId() {
