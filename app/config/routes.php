@@ -2,6 +2,8 @@
 
 use app\controllers\AnimalController;
 use app\controllers\EspeceController;
+use app\controllers\alimentationController;
+
 use flight\Engine;
 use flight\net\Route;
 use flight\net\Router;
@@ -15,7 +17,7 @@ use flight\net\Router;
 $especeController = new EspeceController();
 $animalController = new AnimalController();
 
-$router->get('/', [$especeController, 'goAjoutEspece']);
+//$router->get('/', [$especeController, 'goAjoutEspece']);
 $router->post('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/ajoutEspece', [$especeController, 'ajoutEspece']);
 
@@ -27,6 +29,12 @@ Flight::route('POST /espece/update', ['app\controllers\EspeceController', 'updat
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
 $router->post('/ajoutAnimal', [$animalController, 'ajoutAnimal']);
+
+
+
+$alimentationController = new alimentationController();
+$router->get('/ajoutAlimentation', [$alimentationController, 'afficherFormulaireAjout']);
+$router->post('/ajoutAlimentation', [$alimentationController, 'ajoutAlimentation']);
 
 
 
