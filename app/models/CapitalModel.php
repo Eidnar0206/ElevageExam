@@ -15,30 +15,38 @@ class CapitalModel
     // Achat: sortie
     public function getEntree($date) {
         $query = "SELECT SUM(montant) as s FROM elevage_capitalTransactions 
-        WHERE typeTransaction='entree' and dateTransaction <= ?";
-        $stmt = $this->db->query($query);
+        WHERE typeTransaction='entree' and dateTransaction <= :dt";
+        $stmt = $this->db->prepare($query); 
         $stmt->execute([
-            $date
+            ':dt' => $date
         ]);
-        return $stmt['s'];
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC); 
+        return $result['s'];
     }
+    
 
     public function getSortie($date) {
         $query = "SELECT SUM(montant) as s FROM elevage_capitalTransactions 
-        WHERE typeTransaction='sortie' and dateTransaction <= ?";
-        $stmt = $this->db->query($query);
+        WHERE typeTransaction='sortie' and dateTransaction <= :dt";
+        $stmt = $this->db->prepare($query); 
         $stmt->execute([
-            $date
+            ':dt' => $date
         ]);
-        return $stmt['s'];
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC); 
+        return $result['s'];
     }
 
     public function getMontantInitial() {
-        $query = "SELECT montant as m FROM elevage_capital";
+        $query = "SELECT montant FROM elevage_capital";
         $stmt = $this->db->query($query);
-        $stmt->execute();
-        return $stmt['m'];
-    }
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        if ($result === false) {
+            return 0; 
+        }
+        
+        return $result['montant'];
+    }  
 
     public function getMontantActuelle($date) {
         $entree = $this->getEntree($date);

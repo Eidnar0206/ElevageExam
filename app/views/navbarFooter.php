@@ -28,6 +28,7 @@
                 </div>
                 <a href="#">Inventaire</a>
                 <a href="#">Rapports</a>
+                
             </div>
         </div>
     </nav>

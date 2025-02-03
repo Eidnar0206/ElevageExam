@@ -33,16 +33,7 @@ class AnimalController
         ]);
     }
 
-    public function achatAnimal() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
-        }
-        $especes = Flight::EspeceModel()->getAllEspeces();
-        $data = [
-            'especes' => $especes
-        ];
-        Flight::render('Animal/achatAnimal', $data);
-    }
+    
 
 
 }

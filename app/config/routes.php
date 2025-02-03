@@ -30,6 +30,7 @@ $router->get('/achatAnimal', [$animalController, 'achatAnimal']);
 
 
 Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));
+Flight::route('POST /achatAnimal', array('app\controllers\AnimalController', 'achatAnimal'));
 
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
