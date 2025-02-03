@@ -3,6 +3,8 @@
 namespace app\models\Generalized;
 use ReflectionClass;
 use ReflectionProperty;
+use Exception;
+
 class FrontModel
 {
     private $db;
@@ -10,6 +12,7 @@ class FrontModel
     public function __construct($db) {
         $this->db = $db;
     }
+
     public function generateForm($object, $location) {
         try {
             // Ensure the object is an instance of a class
@@ -32,17 +35,18 @@ class FrontModel
                 $propertyName = $property->getName();
                 $label = isset($labels[$propertyName]) ? $labels[$propertyName] : ucfirst($propertyName); // Get the label for the property
 
-                $type = 'text'; // Default type
-                if ($property->hasType()) {
-                    $typeName = $property->getType()->getName();
-                    if (in_array($typeName, ['int', 'float', 'double'])) {
-                        $type = 'number';
-                    } elseif ($typeName === 'DateTime') {
-                        $type = 'date';
-                    }
+                // Determine input type based on property name
+                if (strpos($propertyName, 'Date') !== false) {
+                    $formHtml .= "<label for=\"$propertyName\">$label:</label>";
+                    $formHtml .= "<input type=\"date\" name=\"$propertyName\" />"; // No value set
+                } elseif (strpos($propertyName, 'age') !== false) {
+                    $formHtml .= "<label for=\"$propertyName\">$label:</label>";
+                    $formHtml .= "<input type=\"number\" name=\"$propertyName\" />"; // No value set
+                } else {
+                    $formHtml .= "<label for=\"$propertyName\">$label:</label>";
+                    $formHtml .= "<input type=\"text\" name=\"$propertyName\" placeholder=\"Entrer $label\" />"; // No value set
                 }
-                $formHtml .= "<label for=\"$propertyName\">$label:</label>";
-                $formHtml .= "<input type=\"$type\" name=\"$propertyName\"/>";
+
                 $formHtml .= "<br>";
             }
 
@@ -58,38 +62,63 @@ class FrontModel
             return 'An unexpected error occurred: ' . $e->getMessage();
         }
     }
+    public function createNewObject($object) {
+        $formValues = array_merge($_POST, $_FILES);
+        $reflectionClass = new ReflectionClass($object);
+        $constructor = $reflectionClass->getConstructor();
+        if (!$constructor) {
+            // If there's no constructor, just create the object without arguments
+            return $reflectionClass->newInstance();
+        }
+        $parameters = $constructor->getParameters();
 
-    public function setSelectOptions($object, $html, $name, $options, $values) {
-        try {
-            $reflection = new ReflectionClass($object);
-            $property = $reflection->getProperty($name);
-            
-            $type = 'text'; // Default to text
-            
-            if ($property->hasType()) {
-                $typeName = $property->getType()->getName();
-                if (in_array($typeName, ['int', 'float', 'double'])) {
-                    $type = 'number';
-                } elseif ($typeName === 'DateTime') {
-                    $type = 'date';
-                }
+        $args = [];
+        foreach ($parameters as $param) {
+            $paramName = $param->getName();
+            if (isset($formValues[$paramName])) {
+                $args[] = $formValues[$paramName];
+            } elseif ($param->isOptional()) {
+                $args[] = $param->getDefaultValue();
+            } else {
+                throw new Exception("Missing required parameter: $paramName");
             }
-    
-            $original = "<input type=\"$type\" name=\"$name\"/>";
-            $select = "<select id=\"$name\" class=\"form-control\" name=\"$name\">";
-            $select .= "<option value='-1'>Select</option>";
-    
-            foreach ($options as $index => $option) {
-                $select .= "<option value='" . htmlspecialchars($values[$index]) . "'>" . htmlspecialchars($option) . "</option>";
-            }
-            $select .= "</select>";
-    
-            return str_replace($original, $select, $html);
-        } catch (\ReflectionException $e) {
-            return 'Error: ' . $e->getMessage();
+        }
+        // Create a new instance with the matched arguments
+        return $reflectionClass->newInstanceArgs($args);
+    }
+
+    function insertObject($object, $tableName) {
+        // Get the object's class and properties
+        $object = $this->createNewObject($object);
+        $reflectionClass = new ReflectionClass($object);
+        $properties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
+
+        // Build column names and values
+        $columns = [];
+        $placeholders = [];
+        $values = [];
+
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            $value = $property->getValue($object);
+
+            $columns[] = $propertyName;
+            $placeholders[] = ":$propertyName";
+            $values[":$propertyName"] = $value;
+        }
+
+        // Construct the SQL query
+        $columnsString = implode(", ", $columns);
+        $placeholdersString = implode(", ", $placeholders);
+        $sql = "INSERT INTO `$tableName` ($columnsString) VALUES ($placeholdersString)";
+
+        // Prepare and execute the query
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute($values)) {
+            return $this->db->lastInsertId(); // Return the ID of the inserted row
+        } else {
+            throw new Exception("Failed to insert object: " . implode(", ", $stmt->errorInfo()));
         }
     }
-    
-    
 
 }
