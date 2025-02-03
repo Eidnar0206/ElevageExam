@@ -12,7 +12,7 @@ class AnimalController
 
     public function goAjoutAnimal() {
         $esp = Flight::EspeceModel()->getAllEspecesIdNom();
-        Flight::render("ajoutAnimal", ["especes" => $esp]);
+        Flight::render("Animal/ajoutAnimal", ["especes" => $esp]);
     }
 
     public function ajoutAnimal() {
@@ -24,6 +24,6 @@ class AnimalController
         $files = $_FILES['photos'];
         Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files);
         $esp = Flight::EspeceModel()->getAllEspecesIdNom();
-        Flight::render("ajoutAnimal", ["especes" => $esp]);
+        Flight::render("Animal/ajoutAnimal", ["especes" => $esp]);
     }
 }
