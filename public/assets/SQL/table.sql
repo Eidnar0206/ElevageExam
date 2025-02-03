@@ -1,81 +1,66 @@
-CREATE TABLE tea_table (
-    idThe INT PRIMARY KEY AUTO_INCREMENT,
-    varietesDeThe VARCHAR(255) NOT NULL,
-    occupation FLOAT NOT NULL,
-    rendementParPied FLOAT NOT NULL
+CREATE DATABASE IF NOT EXISTS elevage;
+USE elevage;
+
+-- Table pour stocker le capital initial
+CREATE TABLE IF NOT EXISTS elevage_capital (
+    idElevage INT PRIMARY KEY AUTO_INCREMENT,
+    montant DECIMAL(10,2) NOT NULL,
+    dateDebut DATE NOT NULL DEFAULT '2025-02-03'
 );
 
-CREATE TABLE tea_parcelle (
-    idParcelle INT PRIMARY KEY AUTO_INCREMENT,
-    surface FLOAT NOT NULL,
-    idThe INT NOT NULL,
-    FOREIGN KEY (idThe) REFERENCES the_table(idThe)
+-- Table des animaux
+CREATE TABLE IF NOT EXISTS elevage_espece (
+    idEspece INT PRIMARY KEY AUTO_INCREMENT,
+    nomEspece VARCHAR(50) NOT NULL,
+    poidsMin DECIMAL(5,2) NOT NULL,
+    poidsMax DECIMAL(5,2) NOT NULL,
+    prixVenteKg DECIMAL(5,2) NOT NULL,
+    joursSansManger INT NOT NULL,
+    pertePoidsJour DECIMAL(4,2) NOT NULL
 );
 
-CREATE TABLE tea_cueilleurs (
-    idCueilleur INT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(255) NOT NULL,
-    genre VARCHAR(255) NOT NULL enum('homme', 'femme'),
-    dateDeNaissance DATE NOT NULL
+-- Table pour stocker les animaux achetés
+CREATE TABLE IF NOT EXISTS elevage_animaux (
+    idAnimal INT PRIMARY KEY AUTO_INCREMENT,
+    idEspece INT NOT NULL,
+    poidsActuel DECIMAL(5,2) NOT NULL,
+    dateAchat DATE NOT NULL,
+    FOREIGN KEY (idEspece) REFERENCES espece(idEspece) ON DELETE CASCADE
 );
 
-CREATE TABLE tea_categorieDepenses (
-    idCategorieDepenses INT PRIMARY KEY AUTO_INCREMENT,
-    categorieDepense VARCHAR(255) NOT NULL
+-- Table des types d’alimentation
+CREATE TABLE IF NOT EXISTS elevage_alimentation (
+    idAlimentation INT PRIMARY KEY AUTO_INCREMENT,
+    nomAlimentation VARCHAR(50) NOT NULL,
+    gainPoids DECIMAL(4,2) NOT NULL -- Pourcentage de gain de poids
 );
 
-CREATE TABLE tea_depenses (
-    idDepenses INT PRIMARY KEY AUTO_INCREMENT,
-    montant FLOAT NOT NULL,
-    dateDepense date NOT NULL,
-    idCategorieDepenses INT NOT NULL,
-    FOREIGN KEY (idCategorieDepenses) REFERENCES tea_categorieDepenses(idCategorieDepenses)
+-- Table pour enregistrer les achats d’alimentation
+CREATE TABLE IF NOT EXISTS elevage_achatAlimentation (
+    idAchatAlimentation INT PRIMARY KEY AUTO_INCREMENT,
+    idAlimentation INT NOT NULL,
+    quantite INT NOT NULL,
+    prixTotal DECIMAL(10,2) NOT NULL,
+    dateAchat DATE NOT NULL,
+    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation(idAlimentation) ON DELETE CASCADE
 );
 
-CREATE TABLE tea_cueillettes (
-    idCueillettes INT PRIMARY KEY AUTO_INCREMENT,
-    dateCueillettes DATE NOT NULL,
-    poidsCueilli FLOAT NOT NULL,
-    idParcelle INT NOT NULL,
-    idCueilleur INT NOT NULL,
-    FOREIGN KEY (idParcelle) REFERENCES tea_parcelle(idParcelle),
-    FOREIGN KEY (idCueilleur) REFERENCES tea_cueilleurs(idCueilleur)
+-- Table pour enregistrer l'alimentation donnée aux animaux
+CREATE TABLE IF NOT EXISTS elevage_alimentationAnimaux (
+    idAlimentationAnimal INT PRIMARY KEY AUTO_INCREMENT,
+    idAnimal INT NOT NULL,
+    idAlimentation INT NOT NULL,
+    dateNourriture DATE NOT NULL,
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE,
+    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation (idAlimentation) ON DELETE CASCADE
 );
 
-CREATE TABLE tea_historiquePrixThe (
-    idHistoriquePrixThe INT PRIMARY KEY AUTO_INCREMENT,
-    prix FLOAT NOT NULL,
-    datePrix DATE NOT NULL,
-    idThe INT NOT NULL,
-    FOREIGN KEY (idThe) REFERENCES tea_table(idThe)
+-- Table des ventes d'animaux
+CREATE TABLE IF NOT EXISTS elevage_Ventes (
+    idVente INT PRIMARY KEY AUTO_INCREMENT,
+    idAnimal INT NOT NULL,
+    poidsVente DECIMAL(5,2) NOT NULL,
+    prixTotal DECIMAL(10,2) NOT NULL,
+    dateVente DATE NOT NULL,
+    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) ON DELETE CASCADE
 );
-
-CREATE TABLE tea_historiqueSalaireCueilleur (
-    idHistoriqueSalaireCueilleur INT PRIMARY KEY AUTO_INCREMENT,
-    salaire FLOAT NOT NULL,
-    dateSalaire DATE NOT NULL,
-    idCueilleur INT NOT NULL,
-    FOREIGN KEY (idCueilleur) REFERENCES tea_cueilleurs(idCueilleur)
-);
-
-CREATE TABLE tea_configurationMbm (
-    poidsMinimal FLOAT NOT NULL,
-    bonus FLOAT NOT NULL,
-    mallus FLOAT NOT NULL
-);
-
-CREATE TABLE tea_paiements (
-    idPaiement INT NOT NULL AUTO_INCREMENT,
-    datePaiement date,
-    idCueilleur INT NOT NULL,
-    poids FLOAT NOT NULL,
-    bonus FLOAT,
-    mallus FLOAT,
-    montant FLOAT NOT NULL,
-    FOREIGN KEY (idCueilleur) REFERENCES tea_cueilleurs(idCueilleur)
-);
-
-
-
-
-
