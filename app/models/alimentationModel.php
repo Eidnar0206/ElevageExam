@@ -23,6 +23,8 @@ class alimentationModel
         if($prix>$montant){
             return false;
         }
+        
+        $model->insertTransaction($montant, 'sortie', 'achat alimentation', $dateAchat);
         return true;
     }
 
