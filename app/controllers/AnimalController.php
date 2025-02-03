@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+use app\models\EspeceModel;
 use Flight;
 
 class AnimalController
@@ -12,11 +13,13 @@ class AnimalController
 
     public function goAjoutAnimal() {
         $esp = Flight::EspeceModel()->getAllEspecesIdNom();
-        Flight::render("ajoutAnimal", ["especes" => $esp]);
+        Flight::render('navbarFooter', [
+            'page' => 'Animal/ajoutAnimal',
+            'especes' => $esp
+        ]);
     }
 
     public function ajoutAnimal() {
-    
         $idEspece = $_POST['idEspece'];
         $prixAchat = $_POST['prixAchat'];
         $poidsInitial = $_POST['poidsInitial'];
@@ -24,6 +27,22 @@ class AnimalController
         $files = $_FILES['photos'];
         Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files);
         $esp = Flight::EspeceModel()->getAllEspecesIdNom();
-        Flight::render("ajoutAnimal", ["especes" => $esp]);
+        Flight::render('navbarFooter', [
+            'page' => 'Animal/ajoutAnimal',
+            'especes' => $esp
+        ]);
     }
+
+    public function achatAnimal() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+        }
+        $especes = Flight::EspeceModel()->getAllEspeces();
+        $data = [
+            'especes' => $especes
+        ];
+        Flight::render('Animal/achatAnimal', $data);
+    }
+
+
 }

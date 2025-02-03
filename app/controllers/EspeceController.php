@@ -24,8 +24,11 @@ class EspeceController
             Flight::EspeceModel()->ajoutEspece($nom, $poidsMin, $poidsMax, 
             $pv, $nbJour, $pertePoids, $qte);
         }
-        Flight::render('Espece\ajoutEspece');
+        Flight::render('navbarFooter', [
+            'page' => 'Espece\ajoutEspece',
+        ]);
     }
+    
 
     public function listEspece() {
         $allEspeces = Flight::EspeceModel()->getAllEspeces();
@@ -52,5 +55,5 @@ class EspeceController
         Flight::json($result);
     }
     
-
+    
 }
