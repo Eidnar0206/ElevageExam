@@ -8,8 +8,15 @@
 <body>
     <h2>Ajouter un Animal</h2>
     <form action="ajoutAnimal" method="POST" enctype="multipart/form-data">
-        <label for="idEspece">ID Espèce:</label>
-        <input type="number" name="idEspece" id="idEspece" required><br>
+        <label for="idEspece">Espèce:</label>
+        <select name="idEspece" id="idEspece" required>
+            <option value="">Sélectionner une espèce</option>
+            <?php foreach ($especes as $espece): ?>
+                <option value="<?= htmlspecialchars($espece['idEspece']) ?>">
+                    <?= htmlspecialchars($espece['nomEspece']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select><br>
 
         <label for="prixAchat">Prix d'Achat (€):</label>
         <input type="number" name="prixAchat" id="prixAchat" required><br>
