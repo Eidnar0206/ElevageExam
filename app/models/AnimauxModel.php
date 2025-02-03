@@ -71,23 +71,13 @@ class AnimauxModel
     }
 
     public function verifySolde($date, $prix) {
-        $solde = Flight::CpitalModel()->getMontantActuelle($date);
+        $solde = Flight::CapitalModel()->getMontantActuelle($date);
         if($solde >= $prix) {
             return true;
         }
         return false;
     }
+
     
-    public function achatAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat) {
-        $query = "INSERT INTO elevage_animaux(idEspece, prixAchat, poidsInitial, dateAchat) VALUES (:id, :prix, :poids, 
-        :datee)";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([
-            ':id' => $idEspece,
-            ':prix' => $prixAchat,
-            ':poids' => $poidsInitial,
-            ':datee' => $dateAchat
-        ]);
-    }
 
 }

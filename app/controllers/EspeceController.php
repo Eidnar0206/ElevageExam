@@ -28,14 +28,14 @@ class EspeceController
             'page' => 'Espece\ajoutEspece',
         ]);
     }
-    
 
     public function listEspece() {
         $allEspeces = Flight::EspeceModel()->getAllEspeces();
         $data = [
+            'page' => 'Espece\listEspeces',
             'especes' => $allEspeces
         ];
-        Flight::render('Espece/listEspeces', $data);
+        Flight::render('navbarFooter', $data);
     }
 
     public static function update() {

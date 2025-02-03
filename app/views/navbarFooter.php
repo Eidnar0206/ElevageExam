@@ -28,16 +28,15 @@
                 </div>
                 <a href="#">Inventaire</a>
                 <a href="#">Rapports</a>
+                
             </div>
         </div>
     </nav>
-    <main>
         <?php
             if(isset(($page))) {
                 include($page.'.php'); 
             }
         ?>
-    </main>
     <footer>
         <div class="footer-content">
             <div class="footer-section">
