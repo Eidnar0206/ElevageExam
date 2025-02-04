@@ -94,7 +94,7 @@ class AnimauxModel
         return false;
     }
     public function getAnimalsBoughtOnDate($date) {
-        $query = "SELECT * FROM elevage_animals WHERE dateAchat = :date";
+        $query = "SELECT * FROM elevage_animaux WHERE dateAchat = :date";
         $stmt = $this->db->prepare($query);
         $stmt->execute([':date' => $date]);
         $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);

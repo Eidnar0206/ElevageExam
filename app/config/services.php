@@ -7,6 +7,8 @@ use flight\debug\database\PdoQueryCapture;
 use Tracy\Debugger;
 use app\models\EspeceModel;
 use app\models\Fonction\FonctionModel;
+use app\models\alimentationModel;
+
 use app\models\CapitalModel;
 
 
@@ -52,4 +54,8 @@ Flight::map('FonctionModel', function () {
 
 Flight::map('CapitalModel', function () {
     return new CapitalModel(Flight::db());
+});
+
+Flight::map('alimentationModel', function () {
+    return new AlimentationModel(Flight::db());
 });

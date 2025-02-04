@@ -47,6 +47,9 @@ $router->post('/ajoutAlimentation', [$alimentationController, 'ajoutAlimentation
 $router->get('/achatAlimentation', [$alimentationController, 'afficherFormulaireAchat']);
 $router->post('/achatAlimentation', [$alimentationController, 'achatAlimentation']);
 
+$router->get('/goAlimentation', [$alimentationController, 'goStockAlimentation']);
+$router->post('/goAlimentation', [$alimentationController, 'stockAlimentation']);
+
 
 
 
