@@ -7,7 +7,7 @@ use flight\debug\database\PdoQueryCapture;
 use Tracy\Debugger;
 use app\models\EspeceModel;
 use app\models\Fonction\FonctionModel;
-use app\models\Fonction\CapitalModel;
+use app\models\CapitalModel;
 
 
 /** 

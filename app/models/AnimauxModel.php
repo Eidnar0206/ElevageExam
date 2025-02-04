@@ -77,17 +77,5 @@ class AnimauxModel
         }
         return false;
     }
-    
-    public function achatAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat) {
-        $query = "INSERT INTO elevage_animaux(idEspece, prixAchat, poidsInitial, dateAchat) VALUES (:id, :prix, :poids, 
-        :datee)";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([
-            ':id' => $idEspece,
-            ':prix' => $prixAchat,
-            ':poids' => $poidsInitial,
-            ':datee' => $dateAchat
-        ]);
-    }
 
 }
