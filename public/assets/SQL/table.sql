@@ -112,3 +112,5 @@ CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
     nomImage VARCHAR(50) NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
+
+

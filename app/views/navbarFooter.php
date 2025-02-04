@@ -11,7 +11,7 @@
         <div class="nav-container">
             <div class="logo-text">FermeGestion</div>
             <div class="nav-links">
-                <a href="#">Tableau de Bord</a>
+                <a href="tableauBord">Tableau de Bord</a>
                 <div class="dropdown">
                     <a href="#" class="dropdown-toggle">Ajout</a>
                     <div class="dropdown-menu">
