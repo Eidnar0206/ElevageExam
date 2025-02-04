@@ -107,7 +107,6 @@ class alimentationModel
     
         return $totalAchats - $totalConsommation;
     }   
-
     function getStockOnDate($date) {
         $dateActu = Flight::CapitalModel()->getDateDebut();
         $stockActu = Flight::EspeceModel()->getStockByEspece($dateActu);
@@ -133,6 +132,28 @@ class alimentationModel
                 }
             }
             $dateActu->modify('+1 day');
+            $stockTemp = Flight::EspeceModel()->getStockByEspece($dateActu);
+            $animauxTemp = Flight::AnimauxModel()->getAnimalsBoughtOnDate($dateActu);
+
+            // Add the new animals to the existing list
+            foreach ($animauxTemp as $idEspece => $newAnimals) {
+                if (isset($animauxActu[$idEspece])) {
+                    // Merge the new animals with the existing ones
+                    $animauxActu[$idEspece] = array_merge($animauxActu[$idEspece], $newAnimals);
+                } else {
+                    // If the species does not exist yet, add it with the new animals
+                    $animauxActu[$idEspece] = $newAnimals;
+                }
+            }
+            foreach ($stockTemp as $idEspece => $quantite) {
+                if (isset($stockActu[$idEspece])) {
+                    $stockActu[$idEspece] += $quantite;  // Add the stockTemp value to stockActu
+                } else {
+                    // If the species ID is not found in stockActu, initialize it
+                    $stockActu[$idEspece] = $quantite;
+                }
+            }
         }
+        return $stockActu;
     }
 }
