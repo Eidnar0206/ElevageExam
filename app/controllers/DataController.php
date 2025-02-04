@@ -15,6 +15,6 @@ class DataController
     public function reset(){
         $model = new FonctionModel(Flight::db());
         $model->resetData();
-        Flight::redirect('/');
+        Flight::render('Capital/initialCapital');
     }
 }

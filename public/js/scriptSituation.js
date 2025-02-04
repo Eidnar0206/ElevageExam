@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     ${data.map(animal => `
                         <li>
                             <img 
-                                src="../${animal.image}"
+                                src="../assets/img/${animal.image}"
                                 alt="Image de ${animal.espece}"
                                 class="animal-img lazy-load"
                                 style="max-width: 100%; height: auto;"
