@@ -108,15 +108,19 @@ class EspeceModel
 
     public function getEspeceDetails($idEspece) {
         $query = "
-            SELECT quantiteNourritureJour, joursSansManger 
-            FROM elevage_espece 
-            WHERE idEspece = :idEspece
+            SELECT quantiteNourritureJour, joursSansManger, pertePoidsJour, poidsMax, poidsMin, gainPoids 
+            FROM elevage_espece
+            JOIN elevage_alimentation ON elevage_espece.idEspece = elevage_alimentation.idEspece 
+            WHERE elevage_espece.idEspece = :idEspece
         ";
         $stmt = $this->db->prepare($query);
         $stmt->execute([':idEspece' => $idEspece]);
         return $stmt->fetch(\PDO::FETCH_ASSOC) ?: [
             'quantiteNourritureJour' => 0,
-            'joursSansManger' => 0
+            'joursSansManger' => 0,
+            'pertePoidsJour' => 0,
+            'poidsMax' => 0,
+            'poidsMin' => 0
         ];
     }
 

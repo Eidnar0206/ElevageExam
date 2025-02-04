@@ -48,6 +48,7 @@ class alimentationModel
     
         return $result['total_achete'] ?? 0;
     }
+    
     public function calculateStockOnDate($targetDate) {
         try {
             $targetDate =  Flight::FonctionModel()->ensureDateTime($targetDate);
@@ -88,11 +89,12 @@ class alimentationModel
                          'dateAchat' => $animal['dateAchat'],
                          'quantiteNourritureJour' => $animal['quantiteNourritureJour'],
                          'joursSansManger' => $animal['joursSansManger'],
-                         'daysWithoutFood' => 0
+                         'daysWithoutFood' => 0,
+                         'canBeSold' => false,
+                         'poidsActuel' => $animal['poidsInitial']
                      ];
                  }
                  
-                
                 // Process feeding and mortality
                 foreach ($animals as $speciesId => $speciesAnimals) {
                     $especeDetails = Flight::EspeceModel()->getEspeceDetails($speciesId);
@@ -101,12 +103,21 @@ class alimentationModel
                     foreach ($speciesAnimals as $key => &$animal) {
                         if ($stockLevels[$speciesId] >= $dailyFoodNeeded) {
                             $stockLevels[$speciesId] -= $dailyFoodNeeded;
-                            $animal['daysWithoutFood'] = 0;
+                            if($animal['poidsActuel'] < $especeDetails['poidsMax']) {
+                                $animal['poidsActuel'] += ($animal['poidsActuel']*$especeDetails['gainPoids']);
+                                $animal['daysWithoutFood'] = 0;
+                            }
                         } else {
                             $animal['daysWithoutFood']++;
+                            $animal['poidsActuel'] -= ($animal['poidsActuel']*$especeDetails['pertePoidsJour']);
                             if ($animal['daysWithoutFood'] >= $especeDetails['joursSansManger']) {
                                 unset($speciesAnimals[$key]);
                             }
+                        }
+                        if($animal['poidsActuel'] >= $especeDetails['poidsMin']){
+                            $animal['canBeSold'] = true;
+                        } else {
+                            $animal['canBeSold'] = false;
                         }
                     }
                 }

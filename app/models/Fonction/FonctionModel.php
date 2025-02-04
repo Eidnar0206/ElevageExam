@@ -42,7 +42,7 @@ class FonctionModel
         // Move the uploaded file
         if (move_uploaded_file($file['tmp_name'], $fullPath)) {
             echo 'Upload effectué avec succès !';
-            return $fullPath; // Return the file path on success
+            return $fichier; // Return the file path on success
         } else {
             echo 'Echec de l\'upload !';
             return false; // Return false on failure
@@ -92,18 +92,4 @@ class FonctionModel
             echo "Erreur : " . $e->getMessage();
         }
     }    
-
-    public function ensureDateTime($date) {
-        if (is_string($date)) {
-            try {
-                return new \DateTime($date);
-            } catch (\Exception $e) {
-                throw new \InvalidArgumentException("Invalid date format: $date");
-            }
-        }
-        if ($date instanceof \DateTime) {
-            return $date;
-        }
-        throw new \InvalidArgumentException("Date must be a string or DateTime object");
-    }
 }

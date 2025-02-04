@@ -141,18 +141,23 @@ class AnimalController
             $resultats = [];
             foreach ($animaux as $animal) {
                 $image = $animalModel->getImages($animal['idAnimal']);
+                $img = '';
+                if(count($image)>=1){
+                    $img = $image[0]['nomImage'];
+                }
                 //error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
                 
                 $resultats[] = [
                     "idAnimal" => $animal['idAnimal'],
-                    "espece" => $animal['nomEspece']
+                    "espece" => $animal['nomEspece'], 
+                    "image" => $img
                 ];
             }
 
             error_log("Résultats finaux: " . print_r($resultats, true));
             Flight::json($resultats);
             
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log("Erreur dans getAnimauxValides: " . $e->getMessage());
             Flight::json(["error" => "Erreur serveur: " . $e->getMessage()], 500);
         }

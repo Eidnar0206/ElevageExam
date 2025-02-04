@@ -115,14 +115,12 @@ class SituationModel
         $idEspece = $this->getIdEspeceAnimal($idAnimal);
         $pertePoids = $this->pourcentagePertePoids($idEspece);
         $gainPoids = $this->pourcentageGainPoids($idEspece);
-        $detail = Flight::EspeceModel()->getEspeceDetails($idEspece);
-        $qteParJour = $detail['quantiteNourritureJour'];
+        $qteParJour = Flight::EspeceModel()->getQuantiteNourritureJour($idEspece);
 
         $dateAchatAnimal = Flight::AnimauxModel()->getDateAchat($idAnimal);
 
         while($dateAchatAnimal != $date) {
-            $dateObj = Flight::FonctionModel()->ensureDateTime($dateAchatAnimal);
-            $stockCeJourLa = Flight::EspeceModel()->getStockByEspece($dateObj);
+            $stockCeJourLa = Flight::EspeceModel()->getStockByEspece($dateAchatAnimal);
             if($stockCeJourLa[$idEspece] >= $qteParJour) {
                 $poids = $poids + ($poids * ($gainPoids/100) );
             } else {
@@ -134,6 +132,82 @@ class SituationModel
         }
 
         return $poids;
+    }
+
+    public function calculatePoidsOnDate($targetDate) {
+        try {
+            $targetDate =  Flight::FonctionModel()->ensureDateTime($targetDate);
+            $currentDate = Flight::CapitalModel()->getDateDebut();
+            
+            if (!$currentDate) {
+                throw new \RuntimeException("Could not determine start date");
+            }
+            
+            if ($currentDate > $targetDate) {
+                throw new \InvalidArgumentException("Target date cannot be before start date");
+            }
+
+            $stockLevels = [];
+            $animals = [];
+            
+            // Initialize tracking arrays
+            while ($currentDate <= $targetDate) {
+                $dateString = $currentDate->format('Y-m-d');
+                
+                // Add new stock for the day
+                $newStock =  Flight::EspeceModel()->getStockByEspece($currentDate);
+                foreach ($newStock as $speciesId => $quantity) {
+                    $stockLevels[$speciesId] = ($stockLevels[$speciesId] ?? 0) + $quantity;
+                }
+                
+                 // Add new animals for the day
+                 $newAnimals = Flight::AnimauxModel()->getAnimalsByDate($currentDate);
+                 foreach ($newAnimals as $animal) {
+                     if (!isset($animals[$animal['idEspece']])) {
+                         $animals[$animal['idEspece']] = [];
+                     }
+                     $animals[$animal['idEspece']][] = [
+                         'idAnimal' => $animal['idAnimal'],
+                         'idEspece' => $animal['idEspece'],
+                         'prixAchat' => $animal['prixAchat'],
+                         'poidsInitial' => $animal['poidsInitial'],
+                         'dateAchat' => $animal['dateAchat'],
+                         'quantiteNourritureJour' => $animal['quantiteNourritureJour'],
+                         'joursSansManger' => $animal['joursSansManger'],
+                         'daysWithoutFood' => 0
+                     ];
+                 }
+                 
+                
+                // Process feeding and mortality
+                foreach ($animals as $speciesId => $speciesAnimals) {
+                    $especeDetails = Flight::EspeceModel()->getEspeceDetails($speciesId);
+                    $dailyFoodNeeded = $especeDetails['quantiteNourritureJour'];
+                    
+                    foreach ($speciesAnimals as $key => &$animal) {
+                        if ($stockLevels[$speciesId] >= $dailyFoodNeeded) {
+                            $stockLevels[$speciesId] -= $dailyFoodNeeded;
+                            $animal['daysWithoutFood'] = 0;
+                        } else {
+                            $animal['daysWithoutFood']++;
+                            if ($animal['daysWithoutFood'] >= $especeDetails['joursSansManger']) {
+                                unset($speciesAnimals[$key]);
+                            }
+                        }
+                    }
+                }
+                $currentDate->modify('+1 day');
+            }
+            
+            return [
+                'stock' => $stockLevels,
+                'animals' => $animals
+            ];
+            
+        } catch (\Exception $e) {
+            // Log the error if you have a logging system
+            throw new \RuntimeException("Error calculating stock: " . $e->getMessage());
+        }
     }
     
 }
