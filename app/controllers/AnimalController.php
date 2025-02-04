@@ -39,7 +39,7 @@ class AnimalController
             $messageType = "error";
         }
 
-        
+
     
         // Fetch species for the form
         $esp = Flight::EspeceModel()->getAllEspecesIdNom();
@@ -143,7 +143,7 @@ class AnimalController
                 $image = $animalModel->getImages($animal['idAnimal']);
                 $img = '';
                 if(count($image)>=1){
-                    $img = $image[0]['nomImage'];
+                    $img = $image[0];
                 }
                 //error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
                 
