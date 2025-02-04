@@ -55,3 +55,8 @@ INSERT INTO elevage_imagesAnimaux (idAnimal, nomImage)
 VALUES 
 (1, 'poulet_01.jpg'),
 (2, 'boeuf_01.jpg');
+
+SELECT a.*, e.quantiteNourritureJour, e.joursSansManger
+            FROM elevage_animaux a
+            JOIN elevage_espece e ON a.idEspece = e.idEspece
+            WHERE a.dateAchat = '2025-02-06';

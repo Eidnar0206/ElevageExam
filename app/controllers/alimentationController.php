@@ -82,8 +82,8 @@ class alimentationController
 
     public function stockAlimentation(){
         $date = $_POST['date'];
-        $data = Flight::alimentationModel()->getStockOnDate($date);
-        Flight::render('Alimentation/testStock', $data);
+        $data = Flight::alimentationModel()->calculateStockOnDate($date);
+        Flight::render('Alimentation/testStock', ["data" => $data]);
     }
 
     public function goStockAlimentation(){

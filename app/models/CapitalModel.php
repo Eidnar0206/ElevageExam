@@ -70,15 +70,13 @@ class CapitalModel
         ]);
     }
     public function getDateDebut() {
-        // Query to get the dateDebut from the elevage_capital table
-        $query = "SELECT dateDebut FROM elevage_capital LIMIT 1"; // Assuming there's only one row or you want the first one
+        $query = "SELECT dateDebut FROM elevage_capital LIMIT 1";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        // Fetch the result
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        // Return the dateDebut or null if no result is found
-        return $result ? $result['dateDebut'] : null;
+        return $result ? new \DateTime($result['dateDebut']) : null;
     }
+
     
 
 }

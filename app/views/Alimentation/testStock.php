@@ -7,7 +7,85 @@
         </div>
         <div class="form-actions">
             <button type="submit" class="form-button">Ajouter</button>
-            <button type="reset" class="form-button form-button-secondary">R&eacute;initialiser</button>
+            <button type="reset" class="form-button form-button-secondary">Réinitialiser</button>
         </div>
     </form>
+
+    <?php if(isset($data)): ?>
+        <div style="margin-top: 2rem;">
+            <h2 style="color: var(--text-primary); font-size: 1.5rem; margin-bottom: 1rem;">État des stocks</h2>
+            <div style="display: grid; gap: 2rem;">
+                <!-- Stock Section -->
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--text-primary); font-size: 1.2rem; margin-bottom: 1rem;">Stocks par espèce</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">ID Espèce</th>
+                                <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Quantité en stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($data['stock'] as $especeId => $quantity): ?>
+                            <tr>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6;"><?= htmlspecialchars($especeId) ?></td>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;"><?= number_format($quantity, 2) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Animals Section -->
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--text-primary); font-size: 1.2rem; margin-bottom: 1rem;">État des animaux par espèce</h3>
+                    <?php foreach ($data['animals'] as $especeId => $animals): ?>
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--text-primary); font-size: 1.1rem; margin-bottom: 0.5rem;">Espèce <?= htmlspecialchars($especeId) ?></h4>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">ID Animal</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Jours sans nourriture</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Poids Initial</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Date Achat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($animals as $animal): ?>
+                                    <?php
+                                        // Handle both data structures
+                                        $animalId = isset($animal['idAnimal']) ? $animal['idAnimal'] : 
+                                                  (isset($animal['details']['idAnimal']) ? $animal['details']['idAnimal'] : '');
+                                        $daysWithoutFood = isset($animal['daysWithoutFood']) ? $animal['daysWithoutFood'] : 0;
+                                        $poidsInitial = isset($animal['poidsInitial']) ? $animal['poidsInitial'] : 
+                                                      (isset($animal['details']['poidsInitial']) ? $animal['details']['poidsInitial'] : '');
+                                        $dateAchat = isset($animal['dateAchat']) ? $animal['dateAchat'] : 
+                                                   (isset($animal['details']['dateAchat']) ? $animal['details']['dateAchat'] : '');
+                                    ?>
+                                    <tr>
+                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6;">
+                                            <?= htmlspecialchars($animalId) ?>
+                                        </td>
+                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;">
+                                            <span style="color: <?= $daysWithoutFood > 0 ? '#dc3545' : '#28a745' ?>">
+                                                <?= $daysWithoutFood ?>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;">
+                                            <?= htmlspecialchars($poidsInitial) ?>
+                                        </td>
+                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;">
+                                            <?= htmlspecialchars($dateAchat) ?>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 </main>
