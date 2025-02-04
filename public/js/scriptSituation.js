@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.error) {
                 throw new Error(data.error);
             }
-            
+             
             if (data.length === 0) {
                 resultatDiv.innerHTML = "<p>Aucun animal valide à cette date.</p>";
                 return;
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     ${data.map(animal => `
                         <li>
                             <img 
-                                src="${animal.image}"
+                                src="../${animal.image}"
                                 alt="Image de ${animal.espece}"
                                 class="animal-img lazy-load"
                                 style="max-width: 100%; height: auto;"
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const img = entry.target;
-                        img.src = img.dataset.src;
+                        img.src = img.src;
                         observer.unobserve(img);
                     }
                 });

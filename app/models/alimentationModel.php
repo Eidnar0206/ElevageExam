@@ -48,6 +48,7 @@ class alimentationModel
     
         return $result['total_achete'] ?? 0;
     }
+    
     public function calculateStockOnDate($targetDate) {
         try {
             $targetDate =  Flight::FonctionModel()->ensureDateTime($targetDate);
