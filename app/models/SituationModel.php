@@ -37,7 +37,7 @@ class SituationModel
         FROM elevage_animaux a
         INNER JOIN elevage_morts m ON a.idAnimal = m.idAnimal
         WHERE m.dateMort <= :date_reference";
-        $stmt = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([
             ':date_reference' => $date
         ]);
@@ -48,7 +48,7 @@ class SituationModel
     public function getIdEspeceAnimal($idAnimal) {
         $query = "SELECT idEspece AS id FROM elevage_animaux
         WHERE idAnimal=:id";
-        $stmt = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([
             ':id' => $idAnimal
         ]);
@@ -63,7 +63,7 @@ class SituationModel
     public function getPrixVenteKgParEspece($idEspece) {
         $query = "SELECT prixVenteKg as pv FROM elevage_espece
         WHERE idEspece = :id";
-        $stmt = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([
             ':id' => $idEspece
         ]);
@@ -85,7 +85,7 @@ class SituationModel
 
     public function pourcentagePertePoids($idEspece) {
         $query = "SELECT pertePoidsJour FROM elevage_espece WHERE idEspece=:id";
-        $stmt = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([
             ':id' => $idEspece
         ]);
@@ -98,7 +98,7 @@ class SituationModel
 
     public function pourcentageGainPoids($idEspece) {
         $query = "SELECT gainPoids FROM elevage_alimentation WHERE idEspece=:id";
-        $stmt = $this->db->query($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([
             ':id' => $idEspece
         ]);
@@ -128,6 +128,7 @@ class SituationModel
             }
 
             $dateAchatAnimal->modify('+1 day');
+            // var_dump($stockCeJourLa);
         }
 
         return $poids;

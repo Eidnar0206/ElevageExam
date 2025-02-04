@@ -8,6 +8,7 @@ use Tracy\Debugger;
 use app\models\EspeceModel;
 use app\models\Fonction\FonctionModel;
 use app\models\CapitalModel;
+use app\models\SituationModel;
 
 
 /** 
@@ -52,4 +53,8 @@ Flight::map('FonctionModel', function () {
 
 Flight::map('CapitalModel', function () {
     return new CapitalModel(Flight::db());
+});
+
+Flight::map('SituationModel', function () {
+    return new SituationModel(Flight::db());
 });

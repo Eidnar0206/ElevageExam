@@ -91,7 +91,7 @@ class EspeceModel
             SELECT a.idEspece, SUM(aa.quantite) AS totalQuantite
             FROM elevage_achatAlimentation aa
             JOIN elevage_alimentation a ON aa.idAlimentation = a.idAlimentation
-            WHERE aa.dateAchat = :date
+            WHERE aa.dateAchat = '2024-01-03'
             GROUP BY a.idEspece
         ";
         $stmt = $this->db->prepare($query);

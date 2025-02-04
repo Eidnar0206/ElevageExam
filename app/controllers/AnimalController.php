@@ -51,15 +51,33 @@ class AnimalController
     }
     
     public function goVenteAnimaux() {
+        $errorMessage = null; 
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idAnimal = $_POST['idAnimal'];
             $dateVente = $_POST['dateVente'];
+            $conditionVente = Flight::AnimauxModel()->conditionVente($idAnimal, $dateVente);
+    
+            if ($conditionVente) {
+                $poidsActu = Flight::SituationModel()->getPoidsActuel($idAnimal, $dateVente);
+                $idEspece = Flight::SituationModel()->getIdEspeceAnimal($idAnimal);
+                $prixVenteKg = Flight::SituationModel()->getPrixVenteKgParEspece($idEspece);
+                $prix = $poidsActu * $prixVenteKg;
+    
+                Flight::AnimauxModel()->insertVenteAnimal($idAnimal, $poidsActu, $prix, $dateVente);
+                Flight::CapitalModel()->insertTransaction($prix, 'entree', 'Vente d\'un Animal', $dateVente);
+            } else {
+                $errorMessage = "Les conditions de vente ne sont pas remplies pour cet animal.";
+            }
         }
+    
         $animals = Flight::AnimauxModel()->getAllAnimals();
         Flight::render('navbarFooter', [
             'page' => 'Animal/listeAnimauxVente',
-            'animals' => $animals
+            'animals' => $animals,
+            'errorMessage' => $errorMessage 
         ]);
     }
+    
 
 }
