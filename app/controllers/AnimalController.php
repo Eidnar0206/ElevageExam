@@ -80,4 +80,27 @@ class AnimalController
     }
     
 
+    public static function getAnimauxValides() {
+        $date = $_GET['dateSituation'];
+
+        if (!$date) {
+            Flight::json(["error" => "Date requise"], 400);
+            return;
+        }
+
+        $animalModel = new AnimalModel();
+        $animaux = $animalModel->getAnimauxValide($date);
+
+        $resultats = [];
+        foreach ($animaux as $animal) {
+            $image = $animalModel->getImages($animal['idAnimal']);
+            $resultats[] = [
+                "idAnimal" => $animal['idAnimal'],
+                "espece" => $animal['nomEspece'],
+                "image" => $image
+            ];
+        }
+
+        Flight::json($resultats);
+    }
 }
