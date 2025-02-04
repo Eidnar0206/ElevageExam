@@ -46,40 +46,47 @@
                                 <thead>
                                     <tr style="background: #f8f9fa;">
                                         <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">ID Animal</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">ID Espece</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">Prix Achat</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">Poids Initial</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">Date Achat</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">Quantité Nourriture/Jour</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: left;">Jours Sans Manger</th>
                                         <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Jours sans nourriture</th>
-                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Poids Initial</th>
-                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Date Achat</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Can Be Sold</th>
+                                        <th style="padding: 0.75rem; border-bottom: 2px solid #dee2e6; text-align: right;">Poids Actuel</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($animals as $animal): ?>
+                                <?php foreach ($animals as $animal): ?>
                                     <?php
                                         // Handle both data structures
-                                        $animalId = isset($animal['idAnimal']) ? $animal['idAnimal'] : 
-                                                  (isset($animal['details']['idAnimal']) ? $animal['details']['idAnimal'] : '');
+                                        $animalId = isset($animal['idAnimal']) ? $animal['idAnimal'] : (isset($animal['details']['idAnimal']) ? $animal['details']['idAnimal'] : '');
+                                        $idEspece = isset($animal['idEspece']) ? $animal['idEspece'] : (isset($animal['details']['idEspece']) ? $animal['details']['idEspece'] : '');
+                                        $prixAchat = isset($animal['prixAchat']) ? $animal['prixAchat'] : (isset($animal['details']['prixAchat']) ? $animal['details']['prixAchat'] : '');
+                                        $poidsInitial = isset($animal['poidsInitial']) ? $animal['poidsInitial'] : (isset($animal['details']['poidsInitial']) ? $animal['details']['poidsInitial'] : '');
+                                        $dateAchat = isset($animal['dateAchat']) ? $animal['dateAchat'] : (isset($animal['details']['dateAchat']) ? $animal['details']['dateAchat'] : '');
+                                        $quantiteNourritureJour = isset($animal['quantiteNourritureJour']) ? $animal['quantiteNourritureJour'] : (isset($animal['details']['quantiteNourritureJour']) ? $animal['details']['quantiteNourritureJour'] : '');
+                                        $joursSansManger = isset($animal['joursSansManger']) ? $animal['joursSansManger'] : (isset($animal['details']['joursSansManger']) ? $animal['details']['joursSansManger'] : '');
                                         $daysWithoutFood = isset($animal['daysWithoutFood']) ? $animal['daysWithoutFood'] : 0;
-                                        $poidsInitial = isset($animal['poidsInitial']) ? $animal['poidsInitial'] : 
-                                                      (isset($animal['details']['poidsInitial']) ? $animal['details']['poidsInitial'] : '');
-                                        $dateAchat = isset($animal['dateAchat']) ? $animal['dateAchat'] : 
-                                                   (isset($animal['details']['dateAchat']) ? $animal['details']['dateAchat'] : '');
+                                        $canBeSold = isset($animal['canBeSold']) ? $animal['canBeSold'] : false;
+                                        $poidsActuel = isset($animal['poidsActuel']) ? $animal['poidsActuel'] : $poidsInitial;
                                     ?>
                                     <tr>
-                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6;">
-                                            <?= htmlspecialchars($animalId) ?>
+                                        <td><?= htmlspecialchars($animalId) ?></td>
+                                        <td><?= htmlspecialchars($idEspece) ?></td>
+                                        <td><?= htmlspecialchars($prixAchat) ?></td>
+                                        <td><?= htmlspecialchars($poidsInitial) ?></td>
+                                        <td><?= htmlspecialchars($dateAchat) ?></td>
+                                        <td><?= htmlspecialchars($quantiteNourritureJour) ?></td>
+                                        <td><?= htmlspecialchars($joursSansManger) ?></td>
+                                        <td style="color: <?= $daysWithoutFood > 0 ? '#dc3545' : '#28a745' ?>;">
+                                            <?= $daysWithoutFood ?>
                                         </td>
-                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;">
-                                            <span style="color: <?= $daysWithoutFood > 0 ? '#dc3545' : '#28a745' ?>">
-                                                <?= $daysWithoutFood ?>
-                                            </span>
-                                        </td>
-                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;">
-                                            <?= htmlspecialchars($poidsInitial) ?>
-                                        </td>
-                                        <td style="padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: right;">
-                                            <?= htmlspecialchars($dateAchat) ?>
-                                        </td>
+                                        <td><?= $canBeSold ? 'Yes' : 'No' ?></td>
+                                        <td><?= htmlspecialchars($poidsActuel) ?></td>
                                     </tr>
-                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
