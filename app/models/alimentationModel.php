@@ -39,18 +39,38 @@ class alimentationModel
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function getAchatAlimentation($idAlimentation, $dateDebut, $dateFin) {
-        try {
-            $sql = "SELECT * FROM elevage_achatAlimentation 
-                    WHERE idAlimentation = ? 
-                    AND dateAchat BETWEEN ? AND ?";
-            
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$idAlimentation, $dateDebut, $dateFin]);
-            
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return ['error' => $e->getMessage()];
-        }
+    function getTotalAchatsAlimentation($idAlimentation, $date) {
+        $pdo = $this->db;
+        $sql = "SELECT SUM(quantite) AS total_achete
+                FROM elevage_achatAlimentation
+                WHERE idAlimentation = ? AND dateAchat <= ?";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$idAlimentation, $date]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        return $result['total_achete'] ?? 0;
     }
+
+    function getTotalConsommationAlimentation($idAlimentation, $date) {
+        $pdo = $this->db;
+        $sql = "SELECT SUM(DATEDIFF(? , ea.dateAchat) * ee.quantiteNourritureJour) AS total_consommee
+                FROM elevage_animaux ea
+                JOIN elevage_espece ee ON ea.idEspece = ee.idEspece
+                JOIN elevage_alimentation al ON ee.idEspece = al.idEspece
+                WHERE al.idAlimentation = ? AND ea.dateAchat <= ?";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$date, $idAlimentation, $date]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        return $result['total_consommee'] ?? 0;
+    }
+    
+    function getStockAlimentation($idAlimentation, $date) {
+        $totalAchats = getTotalAchatsAlimentation($idAlimentation, $date);
+        $totalConsommation = getTotalConsommationAlimentation($idAlimentation, $date);
+    
+        return $totalAchats - $totalConsommation;
+    }   
 }

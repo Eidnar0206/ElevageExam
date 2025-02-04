@@ -60,14 +60,14 @@ CREATE TABLE IF NOT EXISTS elevage_achatAlimentation (
 );
 
 -- Table pour enregistrer l'alimentation donnée aux animaux
-CREATE TABLE IF NOT EXISTS elevage_alimentationAnimaux (
+/*CREATE TABLE IF NOT EXISTS elevage_alimentationAnimaux (
     idAlimentationAnimal INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
     idAlimentation INT NOT NULL,
     dateNourriture DATE NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal),
     FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation (idAlimentation) 
-);
+);*/
 
 -- Table des ventes d'animaux
 CREATE TABLE IF NOT EXISTS elevage_Ventes (
@@ -112,4 +112,3 @@ CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
     nomImage VARCHAR(50) NOT NULL,
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
-

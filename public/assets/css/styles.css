@@ -346,6 +346,67 @@ footer {
     background-color: var(--bg-primary);
 }
 
+/* Table Styles */
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.styled-table th {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.styled-table td {
+    color: var(--text-secondary);
+}
+
+.styled-table tbody tr:hover {
+    background-color: var(--bg-secondary);
+}
+
+.styled-table td[contenteditable="true"] {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.styled-table td[contenteditable="true"]:focus {
+    background-color: var(--bg-secondary);
+    outline: none;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .styled-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        white-space: nowrap;
+    }
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-links {
