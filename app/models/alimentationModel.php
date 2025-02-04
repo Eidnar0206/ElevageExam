@@ -48,52 +48,79 @@ class alimentationModel
     
         return $result['total_achete'] ?? 0;
     }
-    public function getStockOnDate($date) {
-        $dateActu = Flight::CapitalModel()->getDateDebut();
-        $stockActu = Flight::EspeceModel()->getStockByEspece($dateActu);
-        $animauxActu = Flight::AnimauxModel()->getAnimalsBoughtOnDate($dateActu);
-        while($dateActu != $date) {
-            foreach ($animauxActu as $idEspece => $animals) {
-                $quantite = Flight::EspeceModel()->getQuantiteNourritureJour($idEspece);
-                $joursSansManger = Flight::EspeceModel()->getJoursSansManger($idEspece);
-                // Loop through each animal for that species
-                foreach ($animals as $index => $animal) {
-                    if($stockActu[$idEspece] < $quantite) {
-                        $animal->dayWithoutFood++;
-                        if($animal->dayWithoutFood >= $joursSansManger) {
-                            // Remove the animal from the array when it reaches the limit
-                            unset($animals[$index]);
+    public function calculateStockOnDate($targetDate) {
+        try {
+            $targetDate =  Flight::FonctionModel()->ensureDateTime($targetDate);
+            $currentDate = Flight::CapitalModel()->getDateDebut();
+            
+            if (!$currentDate) {
+                throw new \RuntimeException("Could not determine start date");
+            }
+            
+            if ($currentDate > $targetDate) {
+                throw new \InvalidArgumentException("Target date cannot be before start date");
+            }
+
+            $stockLevels = [];
+            $animals = [];
+            
+            // Initialize tracking arrays
+            while ($currentDate <= $targetDate) {
+                $dateString = $currentDate->format('Y-m-d');
+                
+                // Add new stock for the day
+                $newStock =  Flight::EspeceModel()->getStockByEspece($currentDate);
+                foreach ($newStock as $speciesId => $quantity) {
+                    $stockLevels[$speciesId] = ($stockLevels[$speciesId] ?? 0) + $quantity;
+                }
+                
+                 // Add new animals for the day
+                 $newAnimals = Flight::AnimauxModel()->getAnimalsByDate($currentDate);
+                 foreach ($newAnimals as $animal) {
+                     if (!isset($animals[$animal['idEspece']])) {
+                         $animals[$animal['idEspece']] = [];
+                     }
+                     $animals[$animal['idEspece']][] = [
+                         'idAnimal' => $animal['idAnimal'],
+                         'idEspece' => $animal['idEspece'],
+                         'prixAchat' => $animal['prixAchat'],
+                         'poidsInitial' => $animal['poidsInitial'],
+                         'dateAchat' => $animal['dateAchat'],
+                         'quantiteNourritureJour' => $animal['quantiteNourritureJour'],
+                         'joursSansManger' => $animal['joursSansManger'],
+                         'daysWithoutFood' => 0
+                     ];
+                 }
+                 
+                
+                // Process feeding and mortality
+                foreach ($animals as $speciesId => $speciesAnimals) {
+                    $especeDetails = Flight::EspeceModel()->getEspeceDetails($speciesId);
+                    $dailyFoodNeeded = $especeDetails['quantiteNourritureJour'];
+                    
+                    foreach ($speciesAnimals as $key => &$animal) {
+                        if ($stockLevels[$speciesId] >= $dailyFoodNeeded) {
+                            $stockLevels[$speciesId] -= $dailyFoodNeeded;
+                            $animal['daysWithoutFood'] = 0;
+                        } else {
+                            $animal['daysWithoutFood']++;
+                            if ($animal['daysWithoutFood'] >= $especeDetails['joursSansManger']) {
+                                unset($speciesAnimals[$key]);
+                            }
                         }
-                        continue;
-                    } else {
-                        $animal->dayWithoutFood = 0;
-                        $stockActu[$idEspece] = $stockActu[$idEspece] - $quantite;
                     }
                 }
+                $currentDate->modify('+1 day');
             }
-            $dateActu->modify('+1 day');
-            $stockTemp = Flight::EspeceModel()->getStockByEspece($dateActu);
-            $animauxTemp = Flight::AnimauxModel()->getAnimalsBoughtOnDate($dateActu);
-
-            // Add the new animals to the existing list
-            foreach ($animauxTemp as $idEspece => $newAnimals) {
-                if (isset($animauxActu[$idEspece])) {
-                    // Merge the new animals with the existing ones
-                    $animauxActu[$idEspece] = array_merge($animauxActu[$idEspece], $newAnimals);
-                } else {
-                    // If the species does not exist yet, add it with the new animals
-                    $animauxActu[$idEspece] = $newAnimals;
-                }
-            }
-            foreach ($stockTemp as $idEspece => $quantite) {
-                if (isset($stockActu[$idEspece])) {
-                    $stockActu[$idEspece] += $quantite;  // Add the stockTemp value to stockActu
-                } else {
-                    // If the species ID is not found in stockActu, initialize it
-                    $stockActu[$idEspece] = $quantite;
-                }
-            }
+            
+            return [
+                'stock' => $stockLevels,
+                'animals' => $animals
+            ];
+            
+        } catch (\Exception $e) {
+            // Log the error if you have a logging system
+            throw new \RuntimeException("Error calculating stock: " . $e->getMessage());
         }
-        return $stockActu;
     }
 }

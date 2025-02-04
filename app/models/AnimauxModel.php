@@ -93,15 +93,20 @@ class AnimauxModel
         }
         return false;
     }
-    public function getAnimalsBoughtOnDate($date) {
-        $query = "SELECT * FROM elevage_animals WHERE dateAchat = :date";
+    public function getAnimalsByDate(\DateTime $date) {
+        $dateObj = Flight::FonctionModel()->ensureDateTime($date);
+        $query = "
+            SELECT a.*, e.quantiteNourritureJour, e.joursSansManger
+            FROM elevage_animaux a
+            JOIN elevage_espece e ON a.idEspece = e.idEspece
+            WHERE a.dateAchat = :date
+        ";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([':date' => $date]);
-        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        return $results;
+        $stmt->execute([':date' => $date->format('Y-m-d')]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function groupAnimalsByEspece($date) {
+    /*public function groupAnimalsByEspece($date) {
         // Fetch all species (we only need the idEspece)
         $especes = Flight::EspeceModel()->getEspeceNamesAndIds();
         $especeIds = [];
@@ -135,7 +140,7 @@ class AnimauxModel
             $groupedAnimals[$idEspece][] = $animalObj;
         }
         return $groupedAnimals;
-    }
+    }*/
     
     
     // Conditions de vente de l'animal 

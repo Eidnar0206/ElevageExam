@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use Flight;
 class EspeceModel 
 {
     protected $db;
@@ -85,60 +85,40 @@ class EspeceModel
         }
     }
     
-    public function getStockByEspece($date) {
-        // Query to get total quantities of food purchased per species (idEspece) on a specific date
+    public function getStockByEspece(\DateTime $date) {
+
+        $dateObj = Flight::FonctionModel()->ensureDateTime($date);
         $query = "
-            SELECT a.idEspece, SUM(aa.quantite) AS totalQuantite
-            FROM elevage_achatAlimentation aa
-            JOIN elevage_alimentation a ON aa.idAlimentation = a.idAlimentation
-            WHERE aa.dateAchat = '2024-01-03'
+            SELECT a.idEspece, COALESCE(SUM(aa.quantite), 0) AS totalQuantite
+            FROM elevage_espece e
+            LEFT JOIN elevage_alimentation a ON e.idEspece = a.idEspece
+            LEFT JOIN elevage_achatAlimentation aa ON aa.idAlimentation = a.idAlimentation 
+                AND aa.dateAchat = :date
             GROUP BY a.idEspece
         ";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([':date' => $date]);
+        $stmt->execute([':date' => $date->format('Y-m-d')]);
         
-        // Fetch the results
-        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        
-        // Initialize an empty array to store the total food quantity for each species
         $foodQuantities = [];
-        
-        // Loop through the results and populate the array with idEspece as the key and total quantity as the value
-        foreach ($results as $row) {
-            $foodQuantities[$row['idEspece']] = $row['totalQuantite'];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $foodQuantities[$row['idEspece']] = (float)$row['totalQuantite'];
         }
-    
         return $foodQuantities;
     }
-    
-    public function getQuantiteNourritureJour($idEspece) {
-        // SQL query to get the quantiteNourritureJour based on idEspece
-        $query = "SELECT quantiteNourritureJour FROM elevage_espece WHERE idEspece = :idEspece";
-    
-        // Prepare and execute the query
+
+    public function getEspeceDetails($idEspece) {
+        $query = "
+            SELECT quantiteNourritureJour, joursSansManger 
+            FROM elevage_espece 
+            WHERE idEspece = :idEspece
+        ";
         $stmt = $this->db->prepare($query);
         $stmt->execute([':idEspece' => $idEspece]);
-    
-        // Fetch the result
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-    
-        // Return the quantiteNourritureJour or null if no result
-        return $result ? $result['quantiteNourritureJour'] : null;
+        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: [
+            'quantiteNourritureJour' => 0,
+            'joursSansManger' => 0
+        ];
     }
 
-    public function getJoursSansManger($idEspece) {
-        // SQL query to get the quantiteNourritureJour based on idEspece
-        $query = "SELECT joursSansManger FROM elevage_espece WHERE idEspece = :idEspece";
-    
-        // Prepare and execute the query
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([':idEspece' => $idEspece]);
-    
-        // Fetch the result
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-    
-        // Return the quantiteNourritureJour or null if no result
-        return $result ? $result['quantiteNourritureJour'] : null;
-    }
     
 }
