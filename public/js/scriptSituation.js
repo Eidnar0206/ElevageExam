@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         resultatDiv.innerHTML = "<p>Chargement en cours...</p>";
 
         // Requête vers le serveur avec logging
-        fetch("animaux-valides?date=" + encodeURIComponent(date))
+        fetch("animaux-valides?dateSituation=" + encodeURIComponent(date))
             .then(response => {
                 console.log("Status de la réponse:", response.status);
                 if (!response.ok) {

@@ -59,6 +59,6 @@ $router->post('/goAlimentation', [$alimentationController, 'stockAlimentation'])
 $DataController = new DataController();
 $router->post('/reset', [$DataController, 'reset']);
 
-// Flight::route('GET /animaux-valides', [$animalController, 'getAnimauxValides']);
+Flight::route('GET /animaux-valides', [$animalController, 'getAnimauxValides']);
 
 

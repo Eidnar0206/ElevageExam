@@ -121,7 +121,7 @@ class AnimalController
 
         try {
             // Instanciation du modèle
-            $animalModel = new AnimalModel();
+            $animalModel = new AnimauxModel(Flight::db());
             
             // Récupération des animaux
             $animaux = $animalModel->getAnimauxValide($date);
@@ -138,12 +138,11 @@ class AnimalController
             $resultats = [];
             foreach ($animaux as $animal) {
                 $image = $animalModel->getImages($animal['idAnimal']);
-                error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
+                //error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
                 
                 $resultats[] = [
                     "idAnimal" => $animal['idAnimal'],
-                    "espece" => $animal['nomEspece'],
-                    "image" => $image
+                    "espece" => $animal['nomEspece']
                 ];
             }
 

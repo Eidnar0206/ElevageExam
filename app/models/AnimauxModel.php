@@ -249,11 +249,11 @@ class AnimauxModel
     }
 
     public function getAnimauxValide($date){
-        $an = getAllAnimal();
+        $an = $this->getAllAnimals();
         $result = [];
         foreach($an as $animal){
             $idAnimal = $animal['idAnimal'];
-            if(notSoldYet($idAnimal, $date) && notDeadYet($idAnimal,$date)){
+            if($this->notSoldYet($idAnimal, $date) && $this->notDeadYet($idAnimal,$date)){
                 $result[] = $animal;
             }
         }
