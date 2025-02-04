@@ -55,18 +55,50 @@ class alimentationModel
     }
 
     function getTotalConsommationAlimentation($idAlimentation, $date) {
-        $pdo = $this->db;
-        $sql = "SELECT SUM(DATEDIFF(? , ea.dateAchat) * ee.quantiteNourritureJour) AS total_consommee
-                FROM elevage_animaux ea
-                JOIN elevage_espece ee ON ea.idEspece = ee.idEspece
-                JOIN elevage_alimentation al ON ee.idEspece = al.idEspece
-                WHERE al.idAlimentation = ? AND ea.dateAchat <= ?";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$date, $idAlimentation, $date]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            // Obtenir la connexion PDO
+            $pdo = $this->db;
     
-        return $result['total_consommee'] ?? 0;
+            // Requête pour calculer la consommation totale
+            $query = "
+                SELECT COALESCE(SUM(
+                    CASE 
+                        WHEN ea.quantite >= es.quantiteNourritureJour 
+                        THEN es.quantiteNourritureJour
+                        ELSE ea.quantite 
+                    END
+                ), 0) AS totalConsommation
+                FROM elevage_animaux a
+                JOIN elevage_espece es ON a.idEspece = es.idEspece
+                JOIN elevage_alimentation al ON al.idEspece = es.idEspece
+                LEFT JOIN elevage_achatAlimentation ea ON ea.idAlimentation = al.idAlimentation
+                WHERE 
+                    al.idAlimentation = :idAlimentation 
+                    AND ea.dateAchat <= :date
+                    AND a.idAnimal NOT IN (
+                        SELECT idAnimal 
+                        FROM elevage_morts 
+                        WHERE dateMort <= :date
+                    )
+            ";
+    
+            // Préparer et exécuter la requête
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':idAlimentation', $idAlimentation, PDO::PARAM_INT);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+            $stmt->execute();
+    
+            // Récupérer le résultat
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            // Retourner le total de consommation
+            return $result['totalConsommation'];
+    
+        } catch (PDOException $e) {
+            // Gestion des erreurs
+            error_log("Erreur dans getTotalConsommationAlimentation : " . $e->getMessage());
+            throw new Exception("Impossible de calculer la consommation totale d'alimentation.");
+        }
     }
     
     function getStockAlimentation($idAlimentation, $date) {
