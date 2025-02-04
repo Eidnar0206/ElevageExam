@@ -65,7 +65,7 @@ class CapitalModel
             ':montant' => $montant,
             ':type' => $typeTransaction,
             ':desc' => $desc,
-            ':dateT' => $date
+            ':dateT' => $dateTransaction
         ]);
     }
 

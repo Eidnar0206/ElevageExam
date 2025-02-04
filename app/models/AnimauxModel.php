@@ -78,6 +78,35 @@ class AnimauxModel
         return false;
     }
 
+    // Conditions de vente de l'animal 
+    // . Mbola tsy novarotana
+    // . Mbola tsy mort
+    // . Poids minimal de vente
     
+    public function notSoldYet($idAnimal) {
+        $query = "SELECT NOT EXISTS (
+                    SELECT 1 FROM elevage_Ventes WHERE idAnimal = :idAnimal
+                  ) AS notSold"; 
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':idAnimal' => $idAnimal]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        return (bool) $result['notSold']; // Retourne true si pas encore vendu, false sinon
+    }
+    
+    public function notDeadYet($idAnimal) {
+        $query = "SELECT NOT EXISTS (
+            SELECT 1 FROM elevage_morts WHERE idAnimal = :idAnimal
+          ) AS notDead"; 
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':idAnimal' => $idAnimal]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return (bool) $result['notDead'];       
+    }
+
+
 
 }
