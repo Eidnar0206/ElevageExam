@@ -9,14 +9,12 @@ class alimentationModel
     public function __construct($db) {
         $this->db = $db;
     }
-
     public function ajoutAlimentation($nomAlimentation, $idEspece, $pct){
         $query = "INSERT INTO elevage_alimentation (nomAlimentation, idEspece, gainPoids)
                     VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$nomAlimentation, $idEspece, $pct]);
     }
-
     public function verifSolde($dateAchat, $prix){
         $model = new CapitalModel($this->db);
         $montant = $model->getMontantActuelle($dateAchat);
@@ -27,20 +25,17 @@ class alimentationModel
         $model->insertTransaction($prix, 'sortie', 'achat alimentation', $dateAchat);
         return true;
     }
-
     public function achatAlimentation($idAlimentation, $quantite, $prixTotal, $dateAchat){
         $query = "INSERT INTO elevage_achatAlimentation (idAlimentation, quantite, prixTotal, dateAchat)
         VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$idAlimentation, $quantite, $prixTotal, $dateAchat]);
     }
-
     public function getAll(){
         $sql = "SELECT * FROM elevage_alimentation";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-
     function getTotalAchatsAlimentation($idAlimentation, $date) {
         $pdo = $this->db;
         $sql = "SELECT SUM(quantite) AS total_achete
@@ -53,14 +48,12 @@ class alimentationModel
     
         return $result['total_achete'] ?? 0;
     }
-
-    function getStockOnDate($date) {
+    public function getStockOnDate($date) {
         $dateActu = Flight::CapitalModel()->getDateDebut();
         $stockActu = Flight::EspeceModel()->getStockByEspece($dateActu);
         $animauxActu = Flight::AnimauxModel()->getAnimalsBoughtOnDate($dateActu);
         while($dateActu != $date) {
             foreach ($animauxActu as $idEspece => $animals) {
-                echo "Species ID: $idEspece\n";
                 $quantite = Flight::EspeceModel()->getQuantiteNourritureJour($idEspece);
                 $joursSansManger = Flight::EspeceModel()->getJoursSansManger($idEspece);
                 // Loop through each animal for that species

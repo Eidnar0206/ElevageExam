@@ -5,6 +5,7 @@ use app\controllers\EspeceController;
 use app\controllers\HomeController;
 use app\controllers\alimentationController;
 use app\controllers\SituationController;
+use app\controllers\DataController;
 use flight\Engine;
 use flight\net\Route;
 use flight\net\Router;
@@ -49,6 +50,9 @@ $router->get('/ajoutAlimentation', [$alimentationController, 'afficherFormulaire
 $router->post('/ajoutAlimentation', [$alimentationController, 'ajoutAlimentation']);
 $router->get('/achatAlimentation', [$alimentationController, 'afficherFormulaireAchat']);
 $router->post('/achatAlimentation', [$alimentationController, 'achatAlimentation']);
+
+$DataController = new DataController();
+$router->post('/reset', [$DataController, 'reset']);
 
 
 

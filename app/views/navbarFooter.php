@@ -34,6 +34,11 @@
             <div class="initial-capital">
                 Capital Initial: <span><?= $_SESSION['capital'] ?></span>
             </div>
+            <div class="reset-button">
+                <form method="post" action="reset">
+                    <button type="submit" name="reset">R&eacute;initialiser les données</button>
+                </form>
+            </div>
         </div>
     </nav>
         <?php

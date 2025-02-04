@@ -32,7 +32,7 @@
             </div>
 
             <div class="form-group">
-                <label for="qte" class="form-label">Quantité de Nourriture par Jour (kg)</label>
+                <label for="qte" class="form-label">Quota de Nourriture Journalier (kg)</label>
                 <input type="number" id="qte" name="qte" class="form-input" placeholder="Entrez la quantité de nourriture par jour" required>
             </div>
 
