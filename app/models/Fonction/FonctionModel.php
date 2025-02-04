@@ -49,5 +49,47 @@ class FonctionModel
         }
     }
 
-
+    public function resetData() {
+        $pdo = $this->db;
+        try {
+            $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+            $pdo->exec("SET SESSION sql_mode = '';");
+    
+            $pdo->beginTransaction();
+    
+            $tables = [
+                "elevage_imagesAnimaux",
+                "elevage_morts",
+                "elevage_Ventes",
+                "elevage_achatAlimentation",
+                "elevage_alimentation",
+                "elevage_animaux",
+                "elevage_espece",
+                "elevage_capitalTransactions",
+                "elevage_capital"
+            ];
+    
+            foreach ($tables as $table) {
+                $stmt = $pdo->prepare("DELETE FROM $table");
+                $stmt->execute();
+                echo "Données supprimées de $table<br>";
+            }
+    
+            $pdo->commit();
+    
+            foreach ($tables as $table) {
+                $stmt = $pdo->prepare("ALTER TABLE $table AUTO_INCREMENT = 1");
+                $stmt->execute();
+            }
+    
+            $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+    
+            echo "Réinitialisation réussie !";
+        } catch (Exception $e) {
+            if ($pdo->inTransaction()) { 
+                $pdo->rollBack();
+            }
+            echo "Erreur : " . $e->getMessage();
+        }
+    }    
 }

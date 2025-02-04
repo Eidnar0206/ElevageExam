@@ -18,6 +18,7 @@
                         <a href="ajoutAnimal">Ajout Animal</a>
                         <a href="ajoutEspece">Ajout Espece</a>
                         <a href="ajoutAlimentation">Ajout Alimentation</a>
+                        <a href="achatAlimentation">Achat Alimentation</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -26,12 +27,17 @@
                         <a href="listEspece">Liste des Especes</a>
                     </div>
                 </div>
-                <a href="#">Inventaire</a>
+                <a href="goVenteAnimaux">Vente Animal</a>
                 <a href="#">Rapports</a>
             </div>
             <!-- Add initial capital here -->
             <div class="initial-capital">
                 Capital Initial: <span><?= $_SESSION['capital'] ?></span>
+            </div>
+            <div class="reset-button">
+                <form method="post" action="reset">
+                    <button type="submit" name="reset">R&eacute;initialiser les données</button>
+                </form>
             </div>
         </div>
     </nav>

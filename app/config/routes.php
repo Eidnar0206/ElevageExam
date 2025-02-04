@@ -5,6 +5,7 @@ use app\controllers\EspeceController;
 use app\controllers\HomeController;
 use app\controllers\alimentationController;
 use app\controllers\SituationController;
+use app\controllers\DataController;
 use flight\Engine;
 use flight\net\Route;
 use flight\net\Router;
@@ -30,9 +31,12 @@ $router->get('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/listEspece', [$especeController, 'listEspece']);
 $router->get('/achatAnimal', [$animalController, 'achatAnimal']);
 $router->get('/tableauBord', [$situationController, 'goSituation']);
+$router->get('/goVenteAnimaux', [$animalController, 'goVenteAnimaux']);
+
 
 Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));
 Flight::route('POST /achatAnimal', array('app\controllers\AnimalController', 'achatAnimal'));
+Flight::route('POST /goVenteAnimaux', array('app\controllers\AnimalController', 'goVenteAnimaux'));
 
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
@@ -49,6 +53,8 @@ $router->post('/achatAlimentation', [$alimentationController, 'achatAlimentation
 
 $router->get('/goAlimentation', [$alimentationController, 'goStockAlimentation']);
 $router->post('/goAlimentation', [$alimentationController, 'stockAlimentation']);
+$DataController = new DataController();
+$router->post('/reset', [$DataController, 'reset']);
 
 
 
