@@ -23,13 +23,13 @@ class AnimauxModel
         $this->poidsInitial = $poidsInitial;
         $this->dateAchat = $dateAchat;
     }
-    public function insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat) {
+    public function insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat, $autoVente) {
         try {
             if ($this->verifySolde($dateAchat, $prixAchat)) {
-                $sql = "INSERT INTO elevage_animaux (idEspece, prixAchat, poidsInitial, dateAchat) 
-                        VALUES (?, ?, ?, ?)";
+                $sql = "INSERT INTO elevage_animaux (idEspece, prixAchat, poidsInitial, dateAchat, autoVente) 
+                        VALUES (?, ?, ?, ?, ?)";
                 $stmt = $this->db->prepare($sql);
-                $stmt->execute([$idEspece, $prixAchat, $poidsInitial, $dateAchat]);
+                $stmt->execute([$idEspece, $prixAchat, $poidsInitial, $dateAchat, $autoVente]);
                 Flight::CapitalModel()->insertTransaction($prixAchat, "sortie", "Achat d'un animal", $dateAchat);
                 return true; // Success
             } else {
@@ -77,9 +77,9 @@ class AnimauxModel
             throw $th; // Handle exceptions
         }
     }
-    public function insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files) {
+    public function insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files, $autoVente) {
         try {
-            $mess = $this->insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat);
+            $mess = $this->insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat, $autoVente);
             $this->insertPhoto($files);
             return $mess;
         } catch (\Exception $th) {
@@ -268,5 +268,18 @@ class AnimauxModel
         ]);
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;        
+    }
+
+    public function getAutoVente($idAnimal) {
+        $query = "SELECT autovente FROM elevage_animaux WHERE idAnimal=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idAnimal
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if($result === false) {
+            return 0;
+        }
+        return $result['autoVente'];        
     }
 }

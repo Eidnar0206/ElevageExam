@@ -114,3 +114,7 @@ CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
 );
 
 
+-- Pour l'autovente
+ALTER TABLE elevage_animaux 
+ADD COLUMN autoVente INT NOT NULL DEFAULT 0;
+
