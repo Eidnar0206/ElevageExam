@@ -11,6 +11,7 @@ use flight\net\Route;
 use flight\net\Router;
 
 Flight::route('POST /especes/update', ['app\controllers\EspeceController', 'update']);
+// Flight::route('POST /animaux-valides', ['app\controllers\AnimalController', 'getAnimauxValides']);
 
 // use Flight;
 
@@ -37,6 +38,8 @@ $router->get('/goVenteAnimaux', [$animalController, 'goVenteAnimaux']);
 Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));
 Flight::route('POST /achatAnimal', array('app\controllers\AnimalController', 'achatAnimal'));
 Flight::route('POST /goVenteAnimaux', array('app\controllers\AnimalController', 'goVenteAnimaux'));
+Flight::route('GET /animaux-valides', array('app\controllers\AnimalController', 'getAnimauxValides'));
+
 
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);
 
@@ -54,7 +57,6 @@ $router->post('/achatAlimentation', [$alimentationController, 'achatAlimentation
 $DataController = new DataController();
 $router->post('/reset', [$DataController, 'reset']);
 
-Flight::route('GET /animaux-valides', [$animalController, 'getAnimauxValides']);
-
+// Flight::route('GET /animaux-valides', [$animalController, 'getAnimauxValides']);
 
 
