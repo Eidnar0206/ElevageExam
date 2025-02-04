@@ -1,36 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un Animal</title>
-</head>
-<body>
-    <h2>Ajouter un Animal</h2>
-    <form action="ajoutAnimal" method="POST" enctype="multipart/form-data">
-        <label for="idEspece">Espèce:</label>
-        <select name="idEspece" id="idEspece" required>
-            <option value="">Sélectionner une espèce</option>
-            <?php foreach ($especes as $espece): ?>
-                <option value="<?= htmlspecialchars($espece['idEspece']) ?>">
-                    <?= htmlspecialchars($espece['nomEspece']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select><br>
 
-        <label for="prixAchat">Prix d'Achat (€):</label>
-        <input type="number" name="prixAchat" id="prixAchat" required><br>
+    <main>
+        <h1 style="margin-bottom: 2rem; color: var(--text-primary); font-size: 2rem;">Ajouter un Animal</h1>
+        <form action="ajoutAnimal" method="POST" enctype="multipart/form-data" class="form-container">
+            <div class="form-group">
+                <label for="idEspece" class="form-label">Espèce</label>
+                <select name="idEspece" id="idEspece" class="form-input" required>
+                    <option value="">Sélectionner une espèce</option>
+                    <?php foreach ($especes as $espece): ?>
+                        <option value="<?= htmlspecialchars($espece['idEspece']) ?>">
+                            <?= htmlspecialchars($espece['nomEspece']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-        <label for="poidsInitial">Poids Initial (kg):</label>
-        <input type="number" step="0.01" name="poidsInitial" id="poidsInitial" required><br>
+            <div class="form-group">
+                <label for="prixAchat" class="form-label">Prix d'Achat (€)</label>
+                <input type="number" name="prixAchat" id="prixAchat" class="form-input" required>
+            </div>
 
-        <label for="dateAchat">Date d'Achat:</label>
-        <input type="date" name="dateAchat" id="dateAchat" required><br>
+            <div class="form-group">
+                <label for="poidsInitial" class="form-label">Poids Initial (kg)</label>
+                <input type="number" step="0.01" name="poidsInitial" id="poidsInitial" class="form-input" required>
+            </div>
 
-        <label for="photos">Photos:</label>
-        <input type="file" name="photos[]" id="photos" multiple accept="image/*"><br>
+            <div class="form-group">
+                <label for="dateAchat" class="form-label">Date d'Achat</label>
+                <input type="date" name="dateAchat" id="dateAchat" class="form-input" required>
+            </div>
 
-        <button type="submit">Ajouter</button>
-    </form>
-</body>
-</html>
+            <div class="form-group">
+                <label for="photos" class="form-label">Photos</label>
+                <input type="file" name="photos[]" id="photos" class="form-input" multiple accept="image/*">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="form-button">Ajouter</button>
+                <button type="reset" class="form-button form-button-secondary">Réinitialiser</button>
+            </div>
+        </form>
+    </main>
