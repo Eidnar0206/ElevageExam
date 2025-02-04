@@ -134,4 +134,6 @@ class SituationModel
         return $poids;
     }
     
+    
+    
 }
