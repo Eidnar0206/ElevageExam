@@ -150,7 +150,7 @@ class AnimauxModel
     
     public function notSoldYet($idAnimal, $date) {
         $query = "SELECT NOT EXISTS (
-                    SELECT 1 FROM elevage_Ventes WHERE idAnimal = :idAnimal AND dateMort <= :date
+                    SELECT 1 FROM elevage_Ventes WHERE idAnimal = :idAnimal AND dateVente <= :date
                   ) AS notSold"; 
         
         $stmt = $this->db->prepare($query);
@@ -178,6 +178,34 @@ class AnimauxModel
         return (bool) $result['notDead'];       
     }
 
+    public function getPoidsMinDeVente($idAnimal) {
+        $idEspece = Flight::SituationModel()->getIdEspeceAnimal($idAnimal);
+        $query = "SELECT poidsMin FROM elevage_espece WHERE idEspece = :idEspece";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':idEspece' => $idEspece
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if($result === false) {
+            return 0;
+        }
+        return $result['poidsMin'];
+    }
+
+    // CONDITION de VENTE
+    public function conditionVente($idAnimal, $date) {
+        $notSolde = $this->notSoldYet($idAnimal, $date);
+        $notDead = $this->notDeadYet($idAnimal, $date);
+        $poidsActuel = Flight::SituationModel()->getPoidsActuel($idAnimal, $date);
+        $poidsMinVente = $this->getPoidsMinDeVente($idAnimal);
+
+        if($notSolde == true && $notDead == true && ($poidsActuel >= $poidsMinVente)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function insertVenteAnimal($idAnimal, $poidsVente, $prixTotal, $dateVente) {
         $query = "INSERT INTO elevage_Ventes(idAnimal, poidsVente, prixTotal, dateVente) VALUES 
         (:id, :poids, :prix, :dateVente)";
@@ -189,7 +217,6 @@ class AnimauxModel
             ':dateVente' => $dateVente
         ]);
     }  
-    // Les animaux encr vivant a une date
 
     public function getDateAchat($idAnimal) {
         $query = "SELECT dateAchat FROM elevage_animaux WHERE idAnimal=:id";
@@ -221,4 +248,25 @@ class AnimauxModel
         return $result;
     }
 
+    public function getAnimauxValide($date){
+        $an = getAllAnimal();
+        $result = [];
+        foreach($an as $animal){
+            $idAnimal = $animal['idAnimal'];
+            if(notSoldYet($idAnimal, $date) && notDeadYet($idAnimal,$date)){
+                $result[] = $animal;
+            }
+        }
+        return $result;
+    }
+
+    public function getImages($idAnimal) {
+        $query = "SELECT nomImage FROM elevage_imagesAnimaux WHERE idAnimal=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idAnimal
+        ]);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;        
+    }
 }

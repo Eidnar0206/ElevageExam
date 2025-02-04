@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+use app\models\AnimauxModel;
 use Flight;
 
 class SituationController 

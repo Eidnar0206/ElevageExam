@@ -10,6 +10,7 @@ use app\models\Fonction\FonctionModel;
 use app\models\alimentationModel;
 
 use app\models\CapitalModel;
+use app\models\SituationModel;
 
 
 /** 
@@ -57,5 +58,9 @@ Flight::map('CapitalModel', function () {
 });
 
 Flight::map('alimentationModel', function () {
-    return new AlimentationModel(Flight::db());
+    return new AlimentationModel(Flight::db())
+});
+
+Flight::map('SituationModel', function () {
+    return new SituationModel(Flight::db());
 });
