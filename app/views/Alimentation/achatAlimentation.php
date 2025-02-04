@@ -1,33 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achat Alimentation</title>
-</head>
-<body>
+<main>
+    <h1 style="margin-bottom: 2rem; color: var(--text-primary); font-size: 2rem;">Achat d'alimentation</h1>
+
     <?php if(isset($insuf)) { ?>
-        <p> Le solde actuel est insuffisant pour effectuer l'achat </p>
+        <p style="color: red"> Le solde actuel est insuffisant pour effectuer l'achat </p>
     <?php } ?>
-    <form action="achatAlimentation" method="post">
-        <p> Alimentation : </p>
-        <select name="idAlimentation">
-            <option></option>
-            <?php foreach($alimentations as $al) { ?>
-                <option value="<?php echo $al['idAlimentation'] ;?>"><?php echo $al['nomAlimentation'];?></option>
-            <?php } ?>
-        </select>
 
-        <p>Quantite </p>
-        <input type="number" name="quantite">
+    <form action="achatAlimentation" method="post" class="form-container">
+        <div class="form-group">
+            <label for="idAlimentation" class="form-label">Alimentation: </label>
+            <select name="idAlimentation" id="idAlimentation" class="form-input" required>
+                <option></option>
+                <?php foreach($alimentations as $al) { ?>
+                    <option value="<?php echo $al['idAlimentation'] ;?>"><?php echo $al['nomAlimentation'];?></option>
+                <?php } ?>
+            </select>
+        </div>
 
-        <p> Prix total </p>
-        <input type="number" name="prixTotal">
+        <div class="form-group">
+            <label for="quantite" class="form-label">Quantite: </label>
+            <input type="number" name="quantite" id="quantite" required>
+        </div>
 
-        <p> DateAchat : </p>
-        <input type="date" name="dateAchat">
+        <div class="form-group">
+            <label for="prixTotal" class="form-label">Prix total: </label>
+            <input type="number" name="prixTotal" id="prixTotal" required>
+        </div>
 
-        <input type="submit" value="Valider">
+        <div class="form-group">
+            <label for="dateAchat" class="form-label">Prix total: </label>
+            <input type="date" name="dateAchat" id="dateAchat" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="form-button">Valider</button>
+            <button type="reset" class="form-button form-button-secondary">R&eacute;initialiser</button>
+        </div>
     </form>
-</body>
-</html>
+</main>
