@@ -87,30 +87,49 @@ class AnimauxModel
     // . Mbola tsy mort
     // . Poids minimal de vente
     
-    public function notSoldYet($idAnimal) {
+    public function notSoldYet($idAnimal, $date) {
         $query = "SELECT NOT EXISTS (
-                    SELECT 1 FROM elevage_Ventes WHERE idAnimal = :idAnimal
+                    SELECT 1 FROM elevage_Ventes WHERE idAnimal = :idAnimal AND dateMort <= :date
                   ) AS notSold"; 
         
         $stmt = $this->db->prepare($query);
-        $stmt->execute([':idAnimal' => $idAnimal]);
+        $stmt->execute([
+            ':idAnimal' => $idAnimal,
+            ':date' => $date
+        ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
         return (bool) $result['notSold']; // Retourne true si pas encore vendu, false sinon
     }
     
-    public function notDeadYet($idAnimal) {
+    public function notDeadYet($idAnimal, $date) {
         $query = "SELECT NOT EXISTS (
-            SELECT 1 FROM elevage_morts WHERE idAnimal = :idAnimal
+            SELECT 1 FROM elevage_morts WHERE idAnimal = :idAnimal AND dateMort <= :date
           ) AS notDead"; 
 
         $stmt = $this->db->prepare($query);
-        $stmt->execute([':idAnimal' => $idAnimal]);
+        $stmt->execute([
+            ':idAnimal' => $idAnimal,
+            ':date' => $date
+        ]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return (bool) $result['notDead'];       
     }
 
+    public function insertVenteAnimal($idAnimal, $poidsVente, $prixTotal, $dateVente) {
+        $query = "INSERT INTO elevage_Ventes(idAnimal, poidsVente, prixTotal, dateVente) VALUES 
+        (:id, :poids, :prix, :dateVente)";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idAnimal,
+            ':poids' => $poidsVente,
+            ':prix' => $prixTotal,
+            ':dateVente' => $dateVente
+        ]);
+    }  
+
+    // Les animaux encr vivant a une date
 
 
 }

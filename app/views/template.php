@@ -11,7 +11,7 @@
         <div class="nav-container">
             <div class="logo-text">FermeGestion</div>
             <div class="nav-links">
-                <a href="#">Tableau de Bord</a>
+                <a href="tableauBord">Tableau de Bord</a>
                 <a href="#">Animaux</a>
                 <a href="#">Santé</a>
                 <a href="#">Inventaire</a>
