@@ -173,6 +173,34 @@ class AnimauxModel
         return (bool) $result['notDead'];       
     }
 
+    public function getPoidsMinDeVente($idAnimal) {
+        $idEspece = Flight::SituationModel()->getIdEspeceAnimal($idAnimal);
+        $query = "SELECT poidsMin FROM elevage_espece WHERE idEspece = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idEspece
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if($result === false) {
+            return 0;
+        }
+        return $result['poidsMin'];
+    }
+
+    // CONDITION de VENTE
+    public function conditionVente($idAnimal, $date) {
+        $notSolde = $this->notSoldYet($idAnimal, $date);
+        $notDead = $this->notDeadYet($idAnimal, $date);
+        $poidsActuel = $this->getPoidsActuel($idAnimal, $date);
+        $poidsMinVente = $this->getPoidsMinDeVente($idAnimal);
+
+        if($notSolde == true && $notDead == true && ($poidsActuel >= $poidsMinVente)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function insertVenteAnimal($idAnimal, $poidsVente, $prixTotal, $dateVente) {
         $query = "INSERT INTO elevage_Ventes(idAnimal, poidsVente, prixTotal, dateVente) VALUES 
         (:id, :poids, :prix, :dateVente)";

@@ -53,6 +53,7 @@ class AnimalController
     public function goVenteAnimaux() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idAnimal = $_POST['idAnimal'];
+            $dateVente = $_POST['dateVente'];
         }
         $animals = Flight::AnimauxModel()->getAllAnimals();
         Flight::render('navbarFooter', [
