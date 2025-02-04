@@ -94,7 +94,7 @@ class alimentationModel
                  
                 
                 // Process feeding and mortality
-                foreach ($animals as $speciesId => &$speciesAnimals) {
+                foreach ($animals as $speciesId => $speciesAnimals) {
                     $especeDetails = Flight::EspeceModel()->getEspeceDetails($speciesId);
                     $dailyFoodNeeded = $especeDetails['quantiteNourritureJour'];
                     
