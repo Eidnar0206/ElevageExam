@@ -40,6 +40,14 @@
                 <input type="file" name="photos[]" id="photos" class="form-input" multiple accept="image/*">
             </div>
 
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <label class="form-label" style="margin-right: 10px;">AutoVente</label>
+                <input type="radio" name="autoVente" id="autoVenteOui" class="form-input" value="1" checked>
+                <label for="autoVenteOui">Oui</label>   
+                <input type="radio" name="autoVente" id="autoVenteNon" class="form-input" value="0">
+                <label for="autoVenteNon">Non</label>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="form-button">Ajouter</button>
                 <button type="reset" class="form-button form-button-secondary">Réinitialiser</button>

@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <a href="goVenteAnimaux">Vente Animal</a>
-                <a href="#">Rapports</a>
+                <a href="#">ETU003331, ETU003335, ETU003363</a>
             </div>
             <!-- Add initial capital here -->
             <div class="initial-capital">

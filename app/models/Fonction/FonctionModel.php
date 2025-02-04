@@ -72,7 +72,7 @@ class FonctionModel
             foreach ($tables as $table) {
                 $stmt = $pdo->prepare("DELETE FROM $table");
                 $stmt->execute();
-                echo "Données supprimées de $table<br>";
+                // echo "Données supprimées de $table<br>";
             }
     
             $pdo->commit();

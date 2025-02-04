@@ -25,9 +25,10 @@ class AnimalController
         $poidsInitial = $_POST['poidsInitial'];
         $dateAchat = $_POST['dateAchat'];
         $files = $_FILES['photos'];
+        $autoVente = $_POST['autoVente'];
     
         // Insert animal and handle the response
-        $result = Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files);
+        $result = Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files, $autoVente);
     
         if ($result === true) {
             $message = "Animal added successfully!";
@@ -37,6 +38,8 @@ class AnimalController
             $message = $result; // Error message from insertAnimal
             $messageType = "error";
         }
+
+
     
         // Fetch species for the form
         $esp = Flight::EspeceModel()->getAllEspecesIdNom();
@@ -140,7 +143,7 @@ class AnimalController
                 $image = $animalModel->getImages($animal['idAnimal']);
                 $img = '';
                 if(count($image)>=1){
-                    $img = $image[0]['nomImage'];
+                    $img = $image[0];
                 }
                 //error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
                 
