@@ -1,23 +1,20 @@
 CREATE DATABASE IF NOT EXISTS elevage;
 USE elevage;
 
--- Table pour stocker le capital initial
 CREATE TABLE IF NOT EXISTS elevage_capital (
     idElevage INT PRIMARY KEY AUTO_INCREMENT,
     montant DECIMAL(10,2) NOT NULL,
     dateDebut DATE NOT NULL DEFAULT '2025-02-03'
 );
 
--- Table pour gérer le capital (entrées et sorties d'argent)
 CREATE TABLE IF NOT EXISTS elevage_capitalTransactions (
     idTransaction INT PRIMARY KEY AUTO_INCREMENT,
     montant DECIMAL(10,2) NOT NULL,
-    typeTransaction ENUM('entree', 'sortie') NOT NULL, -- 'entrée' pour l'ajout d'argent, 'sortie' pour le retrait d'argent
+    typeTransaction ENUM('entree', 'sortie') NOT NULL, 
     description VARCHAR(255),
     dateTransaction DATE NOT NULL DEFAULT '2025-02-03'
 );
 
--- Table des animaux
 CREATE TABLE IF NOT EXISTS elevage_espece (
     idEspece INT PRIMARY KEY AUTO_INCREMENT,
     nomEspece VARCHAR(50) NOT NULL,
@@ -30,7 +27,6 @@ CREATE TABLE IF NOT EXISTS elevage_espece (
     image VARCHAR(250)
 );
 
--- Table pour stocker les animaux achetés
 CREATE TABLE IF NOT EXISTS elevage_animaux (
     idAnimal INT PRIMARY KEY AUTO_INCREMENT,
     idEspece INT NOT NULL,
@@ -40,7 +36,6 @@ CREATE TABLE IF NOT EXISTS elevage_animaux (
     FOREIGN KEY (idEspece) REFERENCES elevage_espece(idEspece) 
 );
 
--- Table des types d’alimentation
 CREATE TABLE IF NOT EXISTS elevage_alimentation (
     idAlimentation INT PRIMARY KEY AUTO_INCREMENT,
     nomAlimentation VARCHAR(50) NOT NULL,
@@ -49,7 +44,6 @@ CREATE TABLE IF NOT EXISTS elevage_alimentation (
     FOREIGN KEY (idEspece) REFERENCES elevage_espece(idEspece) 
 );
 
--- Table pour enregistrer les achats d’alimentation
 CREATE TABLE IF NOT EXISTS elevage_achatAlimentation (
     idAchatAlimentation INT PRIMARY KEY AUTO_INCREMENT,
     idAlimentation INT NOT NULL,
@@ -59,17 +53,6 @@ CREATE TABLE IF NOT EXISTS elevage_achatAlimentation (
     FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation(idAlimentation) 
 );
 
--- Table pour enregistrer l'alimentation donnée aux animaux
-/*CREATE TABLE IF NOT EXISTS elevage_alimentationAnimaux (
-    idAlimentationAnimal INT PRIMARY KEY AUTO_INCREMENT,
-    idAnimal INT NOT NULL,
-    idAlimentation INT NOT NULL,
-    dateNourriture DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal),
-    FOREIGN KEY (idAlimentation) REFERENCES elevage_alimentation (idAlimentation) 
-);*/
-
--- Table des ventes d'animaux
 CREATE TABLE IF NOT EXISTS elevage_Ventes (
     idVente INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
@@ -79,7 +62,6 @@ CREATE TABLE IF NOT EXISTS elevage_Ventes (
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
--- Table pour stocker les morts d’animaux
 CREATE TABLE IF NOT EXISTS elevage_morts (
     idMort INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
@@ -87,25 +69,6 @@ CREATE TABLE IF NOT EXISTS elevage_morts (
     FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
 );
 
---Table pour stocker les perte de poids
-/*CREATE TABLE IF NOT EXISTS elevage_pertePoids (
-    idPertePoids INT PRIMARY KEY AUTO_INCREMENT,
-    idAnimal INT NOT NULL,
-    poidsPerte DECIMAL(5,2) NOT NULL,
-    datePerte DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
-);*/
-
---table pour stocker les gains de poids
-/*CREATE TABLE IF NOT EXISTS elevage_gainPoids (
-    idGainPoids INT PRIMARY KEY AUTO_INCREMENT,
-    idAnimal INT NOT NULL,
-    poidsGagne DECIMAL(5,2) NOT NULL,
-    dateGain DATE NOT NULL,
-    FOREIGN KEY (idAnimal) REFERENCES elevage_animaux(idAnimal) 
-);*/
-
---table pour stocker les images des animaux
 CREATE TABLE IF NOT EXISTS elevage_imagesAnimaux (
     idImage INT PRIMARY KEY AUTO_INCREMENT,
     idAnimal INT NOT NULL,
