@@ -18,12 +18,12 @@
 
         <div class="form-group">
             <label for="gainPoids" class="form-label">Pourcentage de gain de poids pour cette alimentation : </label>
-            <input type="text" name="gainPoids" id="gainPoids">
+            <input type="text" name="gainPoids" id="gainPoids" required>
         </div>
 
         <div class="form-actions">
             <button type="submit" class="form-button">Ajouter</button>
-            <button type="reset" class="form-button form-button-secondary">Réinitialiser</button>
+            <button type="reset" class="form-button form-button-secondary">R&eacute;initialiser</button>
         </div>
         
     </form>

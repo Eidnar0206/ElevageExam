@@ -18,13 +18,13 @@ class alimentationModel
     }
 
     public function verifSolde($dateAchat, $prix){
-        $model = new CapitalModel();
-        $montant = $model->getMontantActuel($dateAchat);
+        $model = new CapitalModel($this->db);
+        $montant = $model->getMontantActuelle($dateAchat);
         if($prix>$montant){
             return false;
         }
-        
-        $model->insertTransaction($montant, 'sortie', 'achat alimentation', $dateAchat);
+
+        $model->insertTransaction($prix, 'sortie', 'achat alimentation', $dateAchat);
         return true;
     }
 

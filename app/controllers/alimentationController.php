@@ -43,9 +43,10 @@ class alimentationController
         $model = new alimentationModel(Flight::db());
         $alimentations = $model->getAll();
         $data = [
-            'alimentations' => $alimentations
+            'alimentations' => $alimentations, 
+            'page' => 'Alimentation/achatAlimentation'
         ];
-        Flight::render('Alimentation/achatAlimentation', $data);        
+        Flight::render('navbarFooter', $data);        
     }
 
     public function achatAlimentation(){
@@ -60,20 +61,22 @@ class alimentationController
         $verif = $model->verifSolde($dateAchat, $prixTotal);
         if($verif){
             $data = [
-                'alimentations' => $alimentations
+                'alimentations' => $alimentations,
+                'page' => 'Alimentation/achatAlimentation'
             ];
 
             $model->achatAlimentation($idAlimentation, $quantite, $prixTotal, $dateAchat);
     
-            Flight::render('Alimentation/achatAlimentation', $data);        
+            Flight::render('navbarFooter', $data);        
         }
         else{
             $data = [
                 'alimentations' => $alimentations,
-                'insuf' => 'dfghjkl'
+                'insuf' => 'dfghjkl',
+                'page' => 'Alimentation/achatAlimentation'
             ];
 
-            Flight::render('Alimentation/achatAlimentation', $data);        
+            Flight::render('navbarFooter', $data);        
         }
     }
 }
