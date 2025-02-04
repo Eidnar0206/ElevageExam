@@ -79,4 +79,8 @@ class alimentationController
             Flight::render('navbarFooter', $data);        
         }
     }
+
+    public function stockAlimentation(){ 
+        
+    }
 }
