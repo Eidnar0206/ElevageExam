@@ -57,4 +57,16 @@ class CapitalModel
         return $capital;
     }
 
+    public function insertTransaction($montant, $typeTransaction, $desc, $dateTransaction) {
+        $query = "INSERT INTO elevage_capitalTransactions(montant, typeTransaction, description, dateTransaction) VALUES
+        (:montant, :type, :desc, :dateT)";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':montant' => $montant,
+            ':type' => $typeTransaction,
+            ':desc' => $desc,
+            ':dateT' => $date
+        ]);
+    }
+
 }
