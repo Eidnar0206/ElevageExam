@@ -244,4 +244,25 @@ class AnimauxModel
         return $result;
     }
 
+    public function getAnimauxValide($date){
+        $an = getAllAnimal();
+        $result = [];
+        foreach($an as $animal){
+            $idAnimal = $animal['idAnimal'];
+            if(notSoldYet($idAnimal, $date) && notDeadYet($idAnimal,$date)){
+                $result[] = $animal;
+            }
+        }
+        return $result;
+    }
+
+    public function getImages($idAnimal) {
+        $query = "SELECT nomImage FROM elevage_imagesAnimaux WHERE idAnimal=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idAnimal
+        ]);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;        
+    }
 }
