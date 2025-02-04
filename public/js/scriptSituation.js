@@ -27,7 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
         resultatDiv.innerHTML = "<p>Chargement en cours...</p>";
         const cleanDate = date.replace(/['"]/g, ''); // Retire les guillemets s'il y en a
 
-        fetch("animaux-valides/" + encodeURIComponent(cleanDate))
+        // Requête vers le serveur avec logging
+        fetch("animaux-valides?dateSituation=" + encodeURIComponent(date))
             .then(response => {
                 console.log("Status de la réponse:", response.status);
                 if (!response.ok) {
