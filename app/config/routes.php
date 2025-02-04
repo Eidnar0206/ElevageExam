@@ -34,11 +34,9 @@ $router->get('/achatAnimal', [$animalController, 'achatAnimal']);
 $router->get('/tableauBord', [$situationController, 'goSituation']);
 $router->get('/goVenteAnimaux', [$animalController, 'goVenteAnimaux']);
 
-
 Flight::route('POST /ajoutEspece', array('app\controllers\EspeceController', 'ajoutEspece'));
 Flight::route('POST /achatAnimal', array('app\controllers\AnimalController', 'achatAnimal'));
 Flight::route('POST /goVenteAnimaux', array('app\controllers\AnimalController', 'goVenteAnimaux'));
-Flight::route('GET /animaux-valides', array('app\controllers\AnimalController', 'getAnimauxValides'));
 
 
 $router->get('/ajoutAnimal', [$animalController, 'goAjoutAnimal']);

@@ -115,12 +115,14 @@ class SituationModel
         $idEspece = $this->getIdEspeceAnimal($idAnimal);
         $pertePoids = $this->pourcentagePertePoids($idEspece);
         $gainPoids = $this->pourcentageGainPoids($idEspece);
-        $qteParJour = Flight::EspeceModel()->getQuantiteNourritureJour($idEspece);
+        $detail = Flight::EspeceModel()->getEspeceDetails($idEspece);
+        $qteParJour = $detail['quantiteNourritureJour'];
 
         $dateAchatAnimal = Flight::AnimauxModel()->getDateAchat($idAnimal);
 
         while($dateAchatAnimal != $date) {
-            $stockCeJourLa = Flight::EspeceModel()->getStockByEspece($dateAchatAnimal);
+            $dateObj = Flight::FonctionModel()->ensureDateTime($dateAchatAnimal);
+            $stockCeJourLa = Flight::EspeceModel()->getStockByEspece($dateObj);
             if($stockCeJourLa[$idEspece] >= $qteParJour) {
                 $poids = $poids + ($poids * ($gainPoids/100) );
             } else {
@@ -133,5 +135,7 @@ class SituationModel
 
         return $poids;
     }
+    
+    
     
 }
