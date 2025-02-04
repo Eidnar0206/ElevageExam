@@ -40,19 +40,19 @@ class AnimauxModel
         }
     }
     function getLastId() {
-        try{
-            $sql="select max(idAnimal) as idAnimal from elevage_animaux";
-            $stmt=$this->db->prepare($sql);
+        try {
+            $sql = "SELECT MAX(idAnimal) as idAnimal FROM elevage_animaux";
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
-            $result=$stmt->fetchAll();
-            foreach ($result as $r) {
-                return $r['idAnimal'];
-            }
-        }
-        catch (\Exception $e){
+            
+            // Use fetchColumn() to get the first column (idAnimal) directly
+            $result = $stmt->fetchColumn();
+            
+            // Return the result, if no result found return 0
+            return $result !== false ? $result : 0;
+        } catch (\Exception $e) {
             throw $e;
         }
-        
     }
     function insertPhoto($files) {
         try {
@@ -79,8 +79,9 @@ class AnimauxModel
     }
     public function insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files) {
         try {
-            $this->insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat);
+            $mess = $this->insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat);
             $this->insertPhoto($files);
+            return $mess;
         } catch (\Exception $th) {
             throw $th;
         }
