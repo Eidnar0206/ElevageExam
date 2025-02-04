@@ -78,29 +78,80 @@ class AnimalController
             'errorMessage' => $errorMessage 
         ]);
     }
-    
+
+    // public static function getAnimauxValides() {
+    //     $date = Flight::request()->query['dateSituation'] ?? null;
+
+    //     if (!$date) {
+    //         Flight::json(["error" => "Date requise"], 400);
+    //         return;
+    //     }
+
+    //     $animalModel = new AnimalModel();
+    //     $animaux = $animalModel->getAnimauxValide($date);
+
+    //     $resultats = [];
+    //     foreach ($animaux as $animal) {
+    //         $image = $animalModel->getImages($animal['idAnimal']);
+    //         $resultats[] = [
+    //             "idAnimal" => $animal['idAnimal'],
+    //             "espece" => $animal['nomEspece'],
+    //             "image" => $image
+    //         ];
+    //     }
+
+    //     Flight::json($resultats);
+    // }
 
     public static function getAnimauxValides() {
-        $date = $_GET['dateSituation'];
+        error_log("Méthode getAnimauxValides appelée");
+    error_log("Toutes les données reçues: " . print_r(Flight::request(), true));
+    $date = Flight::request()->query['dateSituation'] ?? null;
+    error_log("Date reçue: " . $date);
+        // Récupération et logging de la date
+        $date = Flight::request()->query['dateSituation'] ?? null;
+        error_log("Date reçue dans getAnimauxValides: " . $date);
 
+        // Validation de la date
         if (!$date) {
+            error_log("Erreur: Aucune date fournie");
             Flight::json(["error" => "Date requise"], 400);
             return;
         }
 
-        $animalModel = new AnimalModel();
-        $animaux = $animalModel->getAnimauxValide($date);
+        try {
+            // Instanciation du modèle
+            $animalModel = new AnimauxModel(Flight::db());
+            
+            // Récupération des animaux
+            $animaux = $animalModel->getAnimauxValide($date);
+            error_log("Animaux trouvés: " . print_r($animaux, true));
 
-        $resultats = [];
-        foreach ($animaux as $animal) {
-            $image = $animalModel->getImages($animal['idAnimal']);
-            $resultats[] = [
-                "idAnimal" => $animal['idAnimal'],
-                "espece" => $animal['nomEspece'],
-                "image" => $image
-            ];
+            // Vérification si des animaux ont été trouvés
+            if (empty($animaux)) {
+                error_log("Aucun animal trouvé pour la date: " . $date);
+                Flight::json([]);
+                return;
+            }
+
+            // Construction du résultat
+            $resultats = [];
+            foreach ($animaux as $animal) {
+                $image = $animalModel->getImages($animal['idAnimal']);
+                //error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
+                
+                $resultats[] = [
+                    "idAnimal" => $animal['idAnimal'],
+                    "espece" => $animal['nomEspece']
+                ];
+            }
+
+            error_log("Résultats finaux: " . print_r($resultats, true));
+            Flight::json($resultats);
+            
+        } catch (Exception $e) {
+            error_log("Erreur dans getAnimauxValides: " . $e->getMessage());
+            Flight::json(["error" => "Erreur serveur: " . $e->getMessage()], 500);
         }
-
-        Flight::json($resultats);
     }
 }
