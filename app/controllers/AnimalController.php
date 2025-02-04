@@ -138,11 +138,16 @@ class AnimalController
             $resultats = [];
             foreach ($animaux as $animal) {
                 $image = $animalModel->getImages($animal['idAnimal']);
+                $img = '';
+                if(count($image)>=1){
+                    $img = $image[0]['nomImage'];
+                }
                 //error_log("Image trouvée pour animal " . $animal['idAnimal'] . ": " . $image);
                 
                 $resultats[] = [
                     "idAnimal" => $animal['idAnimal'],
-                    "espece" => $animal['nomEspece']
+                    "espece" => $animal['nomEspece'], 
+                    "image" => $img
                 ];
             }
 

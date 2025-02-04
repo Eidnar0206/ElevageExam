@@ -470,3 +470,24 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
+
+
+/*.animal-list-container {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.animal-list-container.loaded {
+    opacity: 1;
+}
+
+.animal-img {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.animal-img.loaded {
+    opacity: 1;
+}*/
