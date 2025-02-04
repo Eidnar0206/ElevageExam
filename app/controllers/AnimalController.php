@@ -18,7 +18,6 @@ class AnimalController
             'especes' => $esp
         ]);
     }
-
     public function ajoutAnimal() {
         $idEspece = $_POST['idEspece'];
         $prixAchat = $_POST['prixAchat'];
@@ -27,11 +26,9 @@ class AnimalController
         $files = $_FILES['photos'];
     
         // Insert animal and handle the response
-        $result = Flight::AnimauxModel()->insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat);
+        $result = Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files);
     
         if ($result === true) {
-            // If insertion is successful, proceed with photo upload
-            Flight::AnimauxModel()->insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files);
             $message = "Animal added successfully!";
             $messageType = "success";
         } else {

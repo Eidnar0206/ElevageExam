@@ -71,6 +71,25 @@ body {
     background-color: var(--bg-secondary);
 }
 
+/* Initial Capital Styles */
+.initial-capital {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.initial-capital span {
+    font-weight: 700;
+    color: var(--accent);
+}
+
 /* Dropdown Styles */
 .dropdown {
     position: relative;

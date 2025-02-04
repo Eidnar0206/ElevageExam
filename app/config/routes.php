@@ -21,8 +21,8 @@ $especeController = new EspeceController();
 $animalController = new AnimalController();
 $homeController = new HomeController();
 
-
-$router->get('/', [$homeController, 'goAccueil']);
+$router->get('/', [$homeController, 'goAjoutCapitalInitial']);
+$router->post('/ajoutCapitalInitial', [$homeController, 'ajoutCapitalInitial']);
 $router->post('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/ajoutEspece', [$especeController, 'ajoutEspece']);
 $router->get('/listEspece', [$especeController, 'listEspece']);

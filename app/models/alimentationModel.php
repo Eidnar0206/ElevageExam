@@ -2,10 +2,10 @@
 
 namespace app\models;
 use app\models\CapitalModel;
+use Flight;
 class alimentationModel 
 {
     protected $db;
-
     public function __construct($db) {
         $this->db = $db;
     }
@@ -75,4 +75,32 @@ class alimentationModel
     
         return $totalAchats - $totalConsommation;
     }   
+
+    function getStockOnDate($date) {
+        $dateActu = Flight::CapitalModel()->getDateDebut();
+        $stockActu = Flight::EspeceModel()->getStockByEspece($dateActu);
+        $animauxActu = Flight::AnimauxModel()->getAnimalsBoughtOnDate($dateActu);
+        while($dateActu != $date) {
+            foreach ($animauxActu as $idEspece => $animals) {
+                echo "Species ID: $idEspece\n";
+                $quantite = Flight::EspeceModel()->getQuantiteNourritureJour($idEspece);
+                $joursSansManger = Flight::EspeceModel()->getJoursSansManger($idEspece);
+                // Loop through each animal for that species
+                foreach ($animals as $index => $animal) {
+                    if($stockActu[$idEspece] < $quantite) {
+                        $animal->dayWithoutFood++;
+                        if($animal->dayWithoutFood >= $joursSansManger) {
+                            // Remove the animal from the array when it reaches the limit
+                            unset($animals[$index]);
+                        }
+                        continue;
+                    } else {
+                        $animal->dayWithoutFood = 0;
+                        $stockActu[$idEspece] = $stockActu[$idEspece] - $quantite;
+                    }
+                }
+            }
+            $dateActu->modify('+1 day');
+        }
+    }
 }

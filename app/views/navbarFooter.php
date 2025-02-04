@@ -28,7 +28,10 @@
                 </div>
                 <a href="#">Inventaire</a>
                 <a href="#">Rapports</a>
-                
+            </div>
+            <!-- Add initial capital here -->
+            <div class="initial-capital">
+                Capital Initial: <span><?= $_SESSION['capital'] ?></span>
             </div>
         </div>
     </nav>

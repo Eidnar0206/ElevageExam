@@ -8,8 +8,19 @@ class AnimauxModel
 {
     protected $db;
 
-    public function __construct($db) {
+    public $idAnimal;
+    public $idEspece;
+    public $prixAchat;
+    public $poidsInitial;
+    public $dateAchat;
+    public $dayWithoutFood;
+    public function __construct($db = null, $idAnimal = null, $idEspece = null, $prix = null, $poidsInitial = null, $dateAchat = null) {
         $this->db = $db;
+        $this->idAnimal = $idAnimal;
+        $this->idEspece = $idEspece;
+        $this->prixAchat = $prix;
+        $this->poidsInitial = $poidsInitial;
+        $this->dateAchat = $dateAchat;
     }
     public function insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat) {
         try {
@@ -68,12 +79,11 @@ class AnimauxModel
     public function insertAnimalWithPhoto($idEspece, $prixAchat, $poidsInitial, $dateAchat, $files) {
         try {
             $this->insertAnimal($idEspece, $prixAchat, $poidsInitial, $dateAchat);
-            //$this->insertPhoto($files);
+            $this->insertPhoto($files);
         } catch (\Exception $th) {
             throw $th;
         }
     }
-
     public function verifySolde($date, $prix) {
         $solde = Flight::CapitalModel()->getMontantActuelle($date);
         if($solde >= $prix) {
@@ -81,7 +91,49 @@ class AnimauxModel
         }
         return false;
     }
+    public function getAnimalsBoughtOnDate($date) {
+        $query = "SELECT * FROM elevage_animals WHERE dateAchat = :date";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':date' => $date]);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $results;
+    }
 
+    public function groupAnimalsByEspece($date) {
+        // Fetch all species (we only need the idEspece)
+        $especes = Flight::EspeceModel()->getEspeceNamesAndIds();
+        $especeIds = [];
+        foreach ($especes as $espece) {
+            $especeIds[] = $espece['idEspece']; // Only storing species idEspece
+        }
+        // Fetch all animals bought on the specified date
+        $results = $this->getAnimalsBoughtOnDate($date);
     
-
+        // Group animals by species id (idEspece)
+        $groupedAnimals = [];
+        foreach ($especeIds as $idEspece) {
+            // Initialize each species group with an empty array
+            $groupedAnimals[$idEspece] = [];
+        }
+    
+        // Add animals to the appropriate species groups
+        foreach ($results as $animal) {
+            $idEspece = $animal['idEspece'];
+    
+            // Create animal object
+            $animalObj = new self(
+                $this->db,
+                $animal['idAnimal'],
+                $idEspece,
+                $animal['prixAchat'],
+                $animal['poidsInitial'],
+                $animal['dateAchat']
+            );
+            // Add the animal object to the appropriate species group
+            $groupedAnimals[$idEspece][] = $animalObj;
+        }
+        return $groupedAnimals;
+    }
+    
+    
 }

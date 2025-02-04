@@ -27,6 +27,13 @@ class EspeceModel
         ]);
     }
 
+    public function getEspeceNames() {
+        $query = "SELECT nomEspece FROM elevage_espece";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_COLUMN);
+    }
+    
     public function supprimerEspece($idEspece) {
         $sql = "DELETE FROM elevage_espece WHERE idEspece=$idEspece";
         $stmt = $this->db->prepare($sql);
@@ -76,6 +83,62 @@ class EspeceModel
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+    
+    public function getStockByEspece($date) {
+        // Query to get total quantities of food purchased per species (idEspece) on a specific date
+        $query = "
+            SELECT a.idEspece, SUM(aa.quantite) AS totalQuantite
+            FROM elevage_achatAlimentation aa
+            JOIN elevage_alimentation a ON aa.idAlimentation = a.idAlimentation
+            WHERE aa.dateAchat = :date
+            GROUP BY a.idEspece
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':date' => $date]);
+        
+        // Fetch the results
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
+        // Initialize an empty array to store the total food quantity for each species
+        $foodQuantities = [];
+        
+        // Loop through the results and populate the array with idEspece as the key and total quantity as the value
+        foreach ($results as $row) {
+            $foodQuantities[$row['idEspece']] = $row['totalQuantite'];
+        }
+    
+        return $foodQuantities;
+    }
+    
+    public function getQuantiteNourritureJour($idEspece) {
+        // SQL query to get the quantiteNourritureJour based on idEspece
+        $query = "SELECT quantiteNourritureJour FROM elevage_espece WHERE idEspece = :idEspece";
+    
+        // Prepare and execute the query
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':idEspece' => $idEspece]);
+    
+        // Fetch the result
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+        // Return the quantiteNourritureJour or null if no result
+        return $result ? $result['quantiteNourritureJour'] : null;
+    }
+
+    public function getJoursSansManger($idEspece) {
+        // SQL query to get the quantiteNourritureJour based on idEspece
+        $query = "SELECT joursSansManger FROM elevage_espece WHERE idEspece = :idEspece";
+    
+        // Prepare and execute the query
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':idEspece' => $idEspece]);
+    
+        // Fetch the result
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+        // Return the quantiteNourritureJour or null if no result
+        return $result ? $result['quantiteNourritureJour'] : null;
     }
     
 }
