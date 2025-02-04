@@ -18,6 +18,7 @@
                         <a href="ajoutAnimal">Ajout Animal</a>
                         <a href="ajoutEspece">Ajout Espece</a>
                         <a href="ajoutAlimentation">Ajout Alimentation</a>
+                        <a href="achatAlimentation">Achat Alimentation</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -26,7 +27,7 @@
                         <a href="listEspece">Liste des Especes</a>
                     </div>
                 </div>
-                <a href="#">Inventaire</a>
+                <a href="goVenteAnimaux">Vente Animal</a>
                 <a href="#">Rapports</a>
             </div>
             <!-- Add initial capital here -->

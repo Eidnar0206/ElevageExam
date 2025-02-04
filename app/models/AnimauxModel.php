@@ -205,5 +205,14 @@ class AnimauxModel
         return $result;
     }
 
-    
+    public function getAllAnimals() {
+        $query = "SELECT a.*, e.nomEspece, e.prixVenteKg
+        FROM elevage_animaux a
+        JOIN elevage_espece e ON a.idEspece = e.idEspece";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
 }

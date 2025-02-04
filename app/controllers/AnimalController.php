@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 use app\models\EspeceModel;
+use app\models\AnimauxModel;
 use Flight;
 
 class AnimalController
@@ -49,6 +50,15 @@ class AnimalController
         ]);
     }
     
-
+    public function goVenteAnimaux() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idAnimal = $_POST['idAnimal'];
+        }
+        $animals = Flight::AnimauxModel()->getAllAnimals();
+        Flight::render('navbarFooter', [
+            'page' => 'Animal/listeAnimauxVente',
+            'animals' => $animals
+        ]);
+    }
 
 }
