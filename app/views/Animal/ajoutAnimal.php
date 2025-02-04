@@ -1,5 +1,11 @@
 
-    <main>
+<main>
+    <?php if (isset($message)): ?>
+    <div class="alert alert-<?= $messageType === 'success' ? 'success' : 'error' ?>">
+        <?= htmlspecialchars($message) ?>
+    </div>
+        <?php endif; ?>
+
         <h1 style="margin-bottom: 2rem; color: var(--text-primary); font-size: 2rem;">Ajouter un Animal</h1>
         <form action="ajoutAnimal" method="POST" enctype="multipart/form-data" class="form-container">
             <div class="form-group">
