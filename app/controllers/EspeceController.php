@@ -28,7 +28,6 @@ class EspeceController
             'page' => 'Espece\ajoutEspece',
         ]);
     }
-    
 
     public function listEspece() {
         $allEspeces = Flight::EspeceModel()->getAllEspeces();

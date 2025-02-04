@@ -71,7 +71,7 @@ class AnimauxModel
     }
 
     public function verifySolde($date, $prix) {
-        $solde = Flight::CpitalModel()->getMontantActuelle($date);
+        $solde = Flight::CapitalModel()->getMontantActuelle($date);
         if($solde >= $prix) {
             return true;
         }
