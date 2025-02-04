@@ -1,6 +1,8 @@
 <?php
 
 namespace app\models;
+use app\models\AnimauxModel;
+use app\models\EspeceModel;
 use Flight;
 
 class SituationModel 
@@ -74,11 +76,61 @@ class SituationModel
     }
 
     // ca depend encr du poids
-    public function getPrixVenteParAnimal($idAnimal, $date) {
+    public function getPrixVenteParAnimal($idAnimal, $date, $poidsActuel) {
         $idEspece = $this->getIdEspeceAnimal($idAnimal);
         $pvParKg = $this->getPrixVenteKgParEspece($idEspece);
-        $poidsActuel = 
         $prix = $poidsActuel * $pvParKg;
+        return $prix;
+    }
+
+    public function pourcentagePertePoids($idEspece) {
+        $query = "SELECT pertePoidsJour FROM elevage_espece WHERE idEspece=:id";
+        $stmt = $this->db->query($query);
+        $stmt->execute([
+            ':id' => $idEspece
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($result === false) {
+            return 0; 
+        }
+        return $result['pertePoidsJour'];
+    }
+
+    public function pourcentageGainPoids($idEspece) {
+        $query = "SELECT gainPoids FROM elevage_alimentation WHERE idEspece=:id";
+        $stmt = $this->db->query($query);
+        $stmt->execute([
+            ':id' => $idEspece
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($result === false) {
+            return 0; 
+        }
+        return $result['gainPoids'];
+    }
+
+    public function getPoidsActuel($idAnimal, $date) {
+        $theAnimal = Flight::AnimauxModel()->getAnimalById($idAnimal);
+        $poids = $theAnimal['poidsInitial'];
+        $idEspece = $this->getIdEspeceAnimal($idAnimal);
+        $pertePoids = $this->pourcentagePertePoids($idEspece);
+        $gainPoids = $this->pourcentageGainPoids($idEspece);
+        $qteParJour = Flight::EspeceModel()->getQuantiteNourritureJour($idEspece);
+
+        $dateAchatAnimal = Flight::AnimauxModel()->getDateAchat($idAnimal);
+
+        while($dateAchatAnimal != $date) {
+            $stockCeJourLa = Flight::EspeceModel()->getStockByEspece($dateAchatAnimal);
+            if($stockCeJourLa[$idEspece] >= $qteParJour) {
+                $poids = $poids + ($poids * ($gainPoids/100) );
+            } else {
+                $poids = $poids - ($poids * ($pertePoids/100));
+            }
+
+            $dateAchatAnimal->modify('+1 day');
+        }
+
+        return $poids;
     }
     
 }

@@ -14,6 +14,7 @@ class AnimauxModel
     public $poidsInitial;
     public $dateAchat;
     public $dayWithoutFood;
+
     public function __construct($db = null, $idAnimal = null, $idEspece = null, $prix = null, $poidsInitial = null, $dateAchat = null) {
         $this->db = $db;
         $this->idAnimal = $idAnimal;
@@ -184,5 +185,25 @@ class AnimauxModel
     }  
     // Les animaux encr vivant a une date
 
+    public function getDateAchat($idAnimal) {
+        $query = "SELECT dateAchat FROM elevage_animaux WHERE idAnimal=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idAnimal
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['dateAchat'];
+    }
 
+    public function getAnimalById($idAnimal) {
+        $query = "SELECT * FROM elevage_animaux WHERE idAnimal=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            ':id' => $idAnimal
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    
 }
